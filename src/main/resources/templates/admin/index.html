@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>航天科技小程序后台管理</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/plugin/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/css/admin.css"/>
+</head>
+<body class="layui-layout-body" ng-app="app">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">航天科技小程序后台管理</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a>控制台</a></li>
+            <li class="layui-nav-item"><a>管理</a></li>
+            <li class="layui-nav-item"><a>用户</a></li>
+            <li class="layui-nav-item">
+                <a>其它系统</a>
+                <dl class="layui-nav-child">
+                    <dd><a>邮件管理</a></dd>
+                    <dd><a>消息管理</a></dd>
+                    <dd><a>授权管理</a></dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a>
+                    <img src="/img/head.jpg" class="layui-nav-img"><span ng-bind="admin.department_name+'，'+admin.user_name"></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a>基本资料</a></dd>
+                    <dd><a>安全设置</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a ng-click="logout()">注销</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree">
+                <li class="layui-nav-item" ng-class="{'layui-nav-itemed':m.select}" ng-click="menuClick(m)" ng-repeat="m in menu">
+                    <a><span ng-bind="m.name"></span></a>
+                    <dl class="layui-nav-child" ng-repeat="p in m.pages">
+                        <dd ng-class="{'layui-this':p.select}"><a ng-href="{{p.path}}" ng-bind="p.name"></a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;" ng-view></div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © 航天科技小程序后台管理
+    </div>
+    <script type="text/javascript" src="/plugin/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/plugin/angularjs/angular.min.js"></script>
+    <script type="text/javascript" src="/plugin/angularjs/angular-route.min.js"></script>
+    <script type="text/javascript" src="/plugin/layui/layui.all.js"></script>
+    <script type="text/javascript" src="/plugin/util/util.js"></script>
+    <script type="text/javascript" src="/js/admin.js"></script>
+</div>
+</body>
+</html>

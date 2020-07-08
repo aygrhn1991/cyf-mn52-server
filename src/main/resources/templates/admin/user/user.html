@@ -1,0 +1,58 @@
+<form>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" ng-model="search.string1">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">部门</label>
+            <div class="layui-input-inline">
+                <select class="layui-input" ng-options="x.id as x.name for x in department" ng-model="search.number1"></select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">账号状态</label>
+            <div class="layui-input-inline">
+                <select class="layui-input" ng-options="x.id as x.name for x in state" ng-model="search.number2"></select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn" ng-click="get()">搜索</button>
+            <button class="layui-btn" ng-click="reset()">重置</button>
+        </div>
+    </div>
+</form>
+<table class="layui-table">
+    <thead>
+    <tr>
+        <th>员工工号</th>
+        <th>员工姓名</th>
+        <th>员工部门</th>
+        <th>注册时间</th>
+        <th>账号状态</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="d in data">
+        <td ng-bind="d.id"></td>
+        <td ng-bind="d.name"></td>
+        <td ng-bind="d.department_name"></td>
+        <td ng-bind="d.systime|date:'yyyy-MM-dd HH:mm:ss'"></td>
+        <td>
+            <span ng-if="d.state==1">未审核</span>
+            <span ng-if="d.state==2">正常</span>
+            <span ng-if="d.state==3">已禁用</span>
+        </td>
+        <td>
+            <button class="layui-btn layui-btn-xs" ng-if="d.state==1" ng-click="editState(d,2)">通过审核</button>
+            <button class="layui-btn layui-btn-xs" ng-if="d.state==1" ng-click="delete(d)">拒绝审核</button>
+            <button class="layui-btn layui-btn-xs" ng-if="d.state==2" ng-click="editState(d,3)">停用</button>
+            <button class="layui-btn layui-btn-xs" ng-if="d.state==3" ng-click="editState(d,2)">启用</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div id="page"></div>

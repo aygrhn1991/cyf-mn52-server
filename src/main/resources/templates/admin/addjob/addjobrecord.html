@@ -1,0 +1,147 @@
+<style>
+    .statistic > span > span {
+        font-weight: bold;
+        margin: 0 5px;
+        color: red;
+    }
+</style>
+<form class="layui-form">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">日期</label>
+            <div class="layui-input-inline">
+                <input id="date" type="text" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn" ng-click="get()">搜索</button>
+            <button class="layui-btn" ng-click="reset()">重置</button>
+        </div>
+    </div>
+</form>
+<div class="statistic">
+    <strong>统计：</strong>
+    <span>加班<span ng-bind="statistic.userCount"></span>人，</span>
+    <span>午餐<span ng-bind="statistic.meal1Count"></span>人，</span>
+    <span>晚餐<span ng-bind="statistic.meal2Count"></span>人，</span>
+    <span>早车(08:00)<span ng-bind="statistic.busToCount"></span>人，</span>
+    <span>晚车(16:30)<span ng-bind="statistic.bus1Count"></span>人，</span>
+    <span>晚车(19:30)<span ng-bind="statistic.bus2Count"></span>人</span>
+</div>
+<hr>
+<table class="layui-table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>申请人</th>
+        <th>申请人部门</th>
+        <th>加班时间</th>
+        <th>用餐</th>
+        <th>早车</th>
+        <th>晚车</th>
+        <th>申报时间</th>
+        <th>
+            <button class="layui-btn layui-btn-xs" ng-click="showAddModal()">添加</button>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="d in data">
+        <td ng-bind="d.id"></td>
+        <td ng-bind="d.user_name"></td>
+        <td ng-bind="d.department_name"></td>
+        <td ng-bind="d.date"></td>
+        <td>
+            <span ng-if="d.meal==1"><span ng-bind="d.meal_time==1?'午餐':d.meal_time==2?'晚餐':'午餐,晚餐'"></span></span>
+        </td>
+        <td>
+            <span ng-if="d.bus_to==1">08:00(<span ng-bind="d.bus_to_station"></span>)</span>
+        </td>
+        <td>
+            <span ng-if="d.bus==1"><span ng-bind="d.bus_time==1?'16:30':'19:30'"></span></span>
+        </td>
+        <td ng-bind="d.systime|date:'yyyy-MM-dd HH:mm:ss'"></td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+<div id="page"></div>
+<div class="modals">
+    <div id="modal" class="modal">
+        <form>
+            <div class="layui-form-item">
+                <label class="layui-form-label">员工</label>
+                <div class="layui-input-block">
+                    <select class="layui-input" ng-options="x.id as x.name for x in user" ng-model="model.userid" ng-disabled="lock"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">加班时间</label>
+                <div class="layui-input-block">
+                    <input id="date-add" type="text" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用餐</label>
+                <div class="layui-input-block">
+                    <div class="layui-row">
+                        <div class="layui-col-xs2" ng-repeat="d in meal">
+                            <input type="radio" name="meal" ng-value="d.id" ng-model="model.meal"><span ng-bind="d.name"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" ng-if="model.meal==1">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-block">
+                    <div class="layui-row">
+                        <div class="layui-col-xs2" ng-repeat="d in mealTime">
+                            <input type="checkbox" name="mealTime" ng-model="d.select"><span ng-bind="d.name"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">早车</label>
+                <div class="layui-input-block">
+                    <div class="layui-row">
+                        <div class="layui-col-xs2">
+                            <input type="checkbox" name="bus_to" ng-model="model.bus_to">早车
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" ng-if="model.bus_to">
+                <label class="layui-form-label">乘车站点</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" ng-model="model.bus_to_station">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">晚车</label>
+                <div class="layui-input-block">
+                    <div class="layui-row">
+                        <div class="layui-col-xs2" ng-repeat="d in bus">
+                            <input type="radio" name="bus" ng-value="d.id" ng-model="model.bus"><span ng-bind="d.name"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" ng-if="model.bus==1">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-block">
+                    <div class="layui-row">
+                        <div class="layui-col-xs2" ng-repeat="d in busTime">
+                            <input type="radio" name="busTime" ng-value="d.id" ng-model="model.bus_time"><span ng-bind="d.name"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" ng-click="add()">新增</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

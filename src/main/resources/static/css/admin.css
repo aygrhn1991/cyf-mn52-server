@@ -1,0 +1,35 @@
+a {
+    cursor: pointer;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.modals {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.modal {
+    padding: 15px;
+}
+
+.layui-input-block {
+    line-height: 38px;
+}
+
+.layui-row:after, .layui-row:before {
+    display: none;
+}
+
+.scroll-table {
+    width: 100%;
+    overflow-x: auto;
+}
