@@ -5,25 +5,9 @@ app.config(function ($routeProvider) {
             templateUrl: '/admin/thumb',
             controller: 'thumbCtrl'
         })
-        .when('/user/admin', {
-            templateUrl: '/admin/user/admin',
-            controller: 'adminCtrl'
-        })
-        .when('/addjob/addjobrecord', {
-            templateUrl: '/admin/addjob/addjobrecord',
-            controller: 'addJobRecordCtrl'
-        })
-        .when('/addjob/addjobstatistic', {
-            templateUrl: '/admin/addjob/addjobstatistic',
-            controller: 'addJobStatisticCtrl'
-        })
-        .when('/produce/patchplan', {
-            templateUrl: '/admin/produce/patchplan',
-            controller: 'patchPlanCtrl'
-        })
-        .when('/produce/boardplan', {
-            templateUrl: '/admin/produce/boardplan',
-            controller: 'boardPlanCtrl'
+        .when('/user', {
+            templateUrl: '/admin/user/user',
+            controller: 'thumbCtrl'
         })
         .when('/welcome', {
             templateUrl: '/admin/welcome'
@@ -38,7 +22,8 @@ app.config(function ($routeProvider) {
 app.run(function ($rootScope, $http, $location) {
     var systemPage = ['#/welcome', '#/password'];
     var pages = [
-        {id: 1, name: '图文管理', sort: 1, group_name: 'mn52管理', group_sort: 1, image: 'empty.jpg', ptah: '/thumb'},
+        {id: 1, name: '图文管理', sort: 1, group_name: 'mn52管理', group_sort: 1, image: 'empty.jpg', path: '#/thumb'},
+        {id: 2, name: '图文管理2', sort: 2, group_name: 'mn52管理2', group_sort: 2, image: 'empty.jpg', path: '#/user'},
     ];
     $rootScope.getAdmin = function () {
         $http.post('/admin/getAdmin').success(function (data) {

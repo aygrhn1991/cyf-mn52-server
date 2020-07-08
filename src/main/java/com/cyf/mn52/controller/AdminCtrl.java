@@ -84,6 +84,11 @@ public class AdminCtrl {
         return "admin/index";
     }
 
+    @RequestMapping("/welcome")
+    public String welcome() {
+        return "admin/welcome";
+    }
+
     @RequestMapping("/thumb")
     public String thumb() {
         return "admin/thumb";
