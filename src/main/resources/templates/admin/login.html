@@ -13,13 +13,13 @@
     <div class="layadmin-user-login layadmin-user-display-show" style="display: none;">
         <div class="layadmin-user-login-main">
             <div class="layadmin-user-login-box layadmin-user-login-header">
-                <h2>航天科技</h2>
-                <p>航天科技小程序后台管理</p>
+                <h2>mn52</h2>
+                <p>mn52后台管理</p>
             </div>
             <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-username"></label>
-                    <input type="text" placeholder="工号" class="layui-input" ng-model="model.userid">
+                    <input type="text" placeholder="账号" class="layui-input" ng-model="model.username">
                 </div>
                 <div class="layui-form-item">
                     <label class="layadmin-user-login-icon layui-icon layui-icon-password"></label>
@@ -58,7 +58,7 @@
             </div>
         </div>
         <div class="layui-trans layadmin-user-login-footer">
-            <p>© 航天科技小程序后台管理</p>
+            <p>© mn52后台管理</p>
         </div>
     </div>
     <script type="text/javascript" src="/plugin/angularjs/angular.js"></script>
@@ -68,8 +68,8 @@
         var app = angular.module('app', []);
         app.controller('loginCtrl', function ($scope, $http) {
             $scope.login = function () {
-                if (window.Util.isNull($scope.model.userid) || window.Util.isNull($scope.model.password)) {
-                    layer.msg('请输入正确的工号和密码');
+                if (window.Util.isNull($scope.model.username) || window.Util.isNull($scope.model.password)) {
+                    layer.msg('请输入正确的账号和密码');
                     return;
                 }
                 $http.post('/admin/doLogin', $scope.model).success(function (data) {
@@ -81,13 +81,10 @@
                 });
             };
             $scope.pageModel = {
-                userid: null,
+                username: null,
                 password: null,
-                state: null,
-                systime: null
             };
             $scope.reset = function () {
-                $scope.loading = null;
                 $scope.model = window.Util.copyObject($scope.pageModel);
             };
             $scope.reset();

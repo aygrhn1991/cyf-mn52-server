@@ -108,31 +108,31 @@ public class ApiCtrl {
         return R.success("管理员列表", count, list);
     }
 
-    //后台-管理员添加管理员账号
-    @RequestMapping("/addAdmin")
-    @ResponseBody
-    public Result addAdmin(@RequestBody Admin model) {
-        String sql = "select count(*) from t_admin t where t.userid=?";
-        int count = this.jdbc.queryForObject(sql, Integer.class, model.userid);
-        if (count >= 1) {
-            return R.error("该员工已授权过管理员权限");
-        }
-        sql = "insert into t_admin(userid,password,state,systime) values(?,'123456',?,now())";
-        count = this.jdbc.update(sql, model.userid, UserStateEnum.active.ordinal());
-        sql = "delete from t_admin_page_admin where userid=?";
-        count = this.jdbc.update(sql, model.userid);
-        for (int id : model.adminIds) {
-            sql = "insert into t_admin_page_admin(userid,page_id) values(?,?)";
-            count = this.jdbc.update(sql, model.userid, id);
-        }
-        sql = "delete from t_admin_page_app where userid=?";
-        count = this.jdbc.update(sql, model.userid);
-        for (int id : model.appIds) {
-            sql = "insert into t_admin_page_app(userid,page_id) values(?,?)";
-            count = this.jdbc.update(sql, model.userid, id);
-        }
-        return R.success("管理员权限授权成功");
-    }
+//    //后台-管理员添加管理员账号
+//    @RequestMapping("/addAdmin")
+//    @ResponseBody
+//    public Result addAdmin(@RequestBody Admin model) {
+//        String sql = "select count(*) from t_admin t where t.userid=?";
+//        int count = this.jdbc.queryForObject(sql, Integer.class, model.userid);
+//        if (count >= 1) {
+//            return R.error("该员工已授权过管理员权限");
+//        }
+//        sql = "insert into t_admin(userid,password,state,systime) values(?,'123456',?,now())";
+//        count = this.jdbc.update(sql, model.userid, UserStateEnum.active.ordinal());
+//        sql = "delete from t_admin_page_admin where userid=?";
+//        count = this.jdbc.update(sql, model.userid);
+//        for (int id : model.adminIds) {
+//            sql = "insert into t_admin_page_admin(userid,page_id) values(?,?)";
+//            count = this.jdbc.update(sql, model.userid, id);
+//        }
+//        sql = "delete from t_admin_page_app where userid=?";
+//        count = this.jdbc.update(sql, model.userid);
+//        for (int id : model.appIds) {
+//            sql = "insert into t_admin_page_app(userid,page_id) values(?,?)";
+//            count = this.jdbc.update(sql, model.userid, id);
+//        }
+//        return R.success("管理员权限授权成功");
+//    }
 
     //后台-管理员修改管理员授权页面，获取管理员已授权页面
     @RequestMapping("/getAdminPage/{userid}")
@@ -148,24 +148,24 @@ public class ApiCtrl {
         return R.success("管理员已授权页面", map);
     }
 
-    //后台-管理员修改管理员授权页面
-    @RequestMapping("/updateAdminPage")
-    @ResponseBody
-    public Result updateAdminPage(@RequestBody Admin model) {
-        String sql = "delete from t_admin_page_admin where userid=?";
-        int count = this.jdbc.update(sql, model.userid);
-        for (int id : model.adminIds) {
-            sql = "insert into t_admin_page_admin(userid,page_id) values(?,?)";
-            count = this.jdbc.update(sql, model.userid, id);
-        }
-        sql = "delete from t_admin_page_app where userid=?";
-        count = this.jdbc.update(sql, model.userid);
-        for (int id : model.appIds) {
-            sql = "insert into t_admin_page_app(userid,page_id) values(?,?)";
-            count = this.jdbc.update(sql, model.userid, id);
-        }
-        return R.success("管理员授权页面更改成功");
-    }
+//    //后台-管理员修改管理员授权页面
+//    @RequestMapping("/updateAdminPage")
+//    @ResponseBody
+//    public Result updateAdminPage(@RequestBody Admin model) {
+//        String sql = "delete from t_admin_page_admin where userid=?";
+//        int count = this.jdbc.update(sql, model.userid);
+//        for (int id : model.adminIds) {
+//            sql = "insert into t_admin_page_admin(userid,page_id) values(?,?)";
+//            count = this.jdbc.update(sql, model.userid, id);
+//        }
+//        sql = "delete from t_admin_page_app where userid=?";
+//        count = this.jdbc.update(sql, model.userid);
+//        for (int id : model.appIds) {
+//            sql = "insert into t_admin_page_app(userid,page_id) values(?,?)";
+//            count = this.jdbc.update(sql, model.userid, id);
+//        }
+//        return R.success("管理员授权页面更改成功");
+//    }
 
     //后台-管理员删除管理员账号
     @RequestMapping("/deleteAdmin/{userid}")

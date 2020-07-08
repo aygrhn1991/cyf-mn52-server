@@ -1,6 +1,6 @@
 package com.cyf.mn52.model;
 
-public class Thumbs {
+public class Thumb {
     public String unique_id;
     public int cat_id;
     public String cat_url;

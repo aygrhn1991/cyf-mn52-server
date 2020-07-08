@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>航天科技小程序后台管理</title>
+    <title>mn52后台管理</title>
     <meta name="viewport"
           content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
@@ -12,7 +12,7 @@
 <body class="layui-layout-body" ng-app="app">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-        <div class="layui-logo">航天科技小程序后台管理</div>
+        <div class="layui-logo">mn52小程序后台管理</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
         <ul class="layui-nav layui-layout-left">
             <li class="layui-nav-item"><a>控制台</a></li>
@@ -30,7 +30,7 @@
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item">
                 <a>
-                    <img src="/img/head.jpg" class="layui-nav-img"><span ng-bind="admin.department_name+'，'+admin.user_name"></span>
+                    <img src="/img/head.jpg" class="layui-nav-img"><span ng-bind="admin.username"></span>
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a>基本资料</a></dd>
@@ -62,7 +62,7 @@
 
     <div class="layui-footer">
         <!-- 底部固定区域 -->
-        © 航天科技小程序后台管理
+        © mn52小程序后台管理
     </div>
     <script type="text/javascript" src="/plugin/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/plugin/angularjs/angular.min.js"></script>
