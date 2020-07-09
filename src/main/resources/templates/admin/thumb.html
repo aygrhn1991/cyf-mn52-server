@@ -1,1 +1,113 @@
-hghg
+<style>
+    .thumb {
+        position: relative;
+        height: 100px;
+        transition: all .2s;
+    }
+
+    .thumb:hover {
+        transform: scale(2, 2);
+        z-index: 1;
+    }
+
+    .thumb-inmodal {
+        margin:10px 10px;
+    }
+</style>
+<form>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" ng-model="search.string1">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">分类</label>
+            <div class="layui-input-inline">
+                <select class="layui-input" ng-options="x.id as x.cat_name for x in category" ng-model="search.number1"></select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn" ng-click="get()">搜索</button>
+            <button class="layui-btn" ng-click="reset()">重置</button>
+        </div>
+    </div>
+</form>
+<table class="layui-table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>封面图</th>
+        <th>分类</th>
+        <th>标题</th>
+        <th>添加时间</th>
+        <th>
+            <button class="layui-btn layui-btn-xs" ng-click="showAddModal()">添加</button>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="d in data">
+        <td ng-bind="d.id"></td>
+        <td>
+            <img class="thumb" ng-src="{{url+d.thumb}}">
+        </td>
+        <td ng-bind="d.cat_name"></td>
+        <td ng-bind="d.title"></td>
+        <td ng-bind="d.created_at|date:'yyyy-MM-dd HH:mm:ss'"></td>
+        <td>
+            <button class="layui-btn layui-btn-xs" ng-click="showImageModal(d)">图片</button>
+            <button class="layui-btn layui-btn-xs" ng-click="showTagModal(d)">图片</button>
+            <!--            <button class="layui-btn layui-btn-xs" ng-if="d.state==3" ng-click="editState(d,2)">启用</button>-->
+            <!--            <button class="layui-btn layui-btn-xs" ng-click="showEditModal(d)">权限</button>-->
+            <!--            <button class="layui-btn layui-btn-xs" ng-click="resetPassword(d)">重置密码</button>-->
+            <!--            <button class="layui-btn layui-btn-xs" ng-click="delete(d)">删除</button>-->
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div id="page"></div>
+<div class="modals">
+    <div id="modal" class="modal">
+        <form>
+            <div class="layui-form-item">
+                <label class="layui-form-label">员工</label>
+                <div class="layui-input-block">
+                    <select class="layui-input" ng-options="x.id as x.name for x in user" ng-model="model.userid" ng-disabled="lock"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限(小程序)</label>
+                <div class="layui-input-block">
+                    <div class="layui-row" ng-repeat="d in appPage">
+                        <div class="layui-col-xs12"><strong ng-bind="d.name"></strong></div>
+                        <div class="layui-col-xs4 layui-col-xs-offset1" ng-repeat="p in d.pages">
+                            <input type="checkbox" ng-model="p.select"><span ng-bind="p.name"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">权限(后台)</label>
+                <div class="layui-input-block">
+                    <div class="layui-row" ng-repeat="d in adminPage">
+                        <div class="layui-col-xs12"><strong ng-bind="d.name"></strong></div>
+                        <div class="layui-col-xs4 layui-col-xs-offset1" ng-repeat="p in d.pages">
+                            <input type="checkbox" ng-model="p.select"><span ng-bind="p.name"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" ng-if="!lock" ng-click="add()">新增</button>
+                    <button class="layui-btn" ng-if="lock" ng-click="edit()">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="modal-image" class="modal">
+        <img class="thumb thumb-inmodal" ng-src="{{url+d.thumb}}" ng-repeat="d in image">
+    </div>
+</div>

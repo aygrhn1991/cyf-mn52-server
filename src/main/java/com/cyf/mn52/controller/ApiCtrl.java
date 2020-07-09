@@ -33,32 +33,36 @@ public class ApiCtrl {
         return R.success("ok", message);
     }
 
-    //region 员工
-    //后台-管理员查看员工列表
-    @RequestMapping("/getUser")
+    //region 图片管理
+    //后台-管理员查看图片列表
+    @RequestMapping("/getThumb")
     @ResponseBody
-    public Result getUser(@RequestBody Search model) {
-        String sql1 = "select t.*,t1.name department_name from t_user t left join t_department t1 on t.department_id=t1.id where 1=1";
-        String sql2 = "select count(*) from t_user t where 1=1";
+    public Result getThumb(@RequestBody Search model) {
+        String sql1 = "select t.* from mn_thumbs t where 1=1";
+        String sql2 = "select count(*) from mn_thumbs t where 1=1";
         if (!(model.string1 == null || model.string1.isEmpty())) {
-            String and = " and t.name like '%" + model.string1 + "%' ";
+            String and = " and t.title like '%" + model.string1 + "%' ";
             sql1 += and;
             sql2 += and;
         }
         if (model.number1 != -1) {
-            String and = " and t.department_id=" + model.number1;
+            String and = " and t.cat_id=" + model.number1;
             sql1 += and;
             sql2 += and;
         }
-        if (model.number2 != -1) {
-            String and = " and t.state=" + model.number2;
-            sql1 += and;
-            sql2 += and;
-        }
-        sql1 += " order by t.id limit " + UtilPage.getPage(model);
+        sql1 += " order by t.created_at desc limit " + UtilPage.getPage(model);
         List<Map<String, Object>> list = this.jdbc.queryForList(sql1);
         int count = this.jdbc.queryForObject(sql2, Integer.class);
-        return R.success("员工列表", count, list);
+        return R.success("图片列表", count, list);
+    }
+
+    //后台-管理员查看子图片
+    @RequestMapping("/getThumbGallery/{id}")
+    @ResponseBody
+    public Result getThumbGallery(@PathVariable String id) {
+        String sql = "select t.* from mn_gallery t where t.thumb_unique_id=?";
+        List<Map<String, Object>> list = this.jdbc.queryForList(sql, id);
+        return R.success("子图片列表", list);
     }
 
     //后台-管理员拒绝员工的认证申请
@@ -134,19 +138,6 @@ public class ApiCtrl {
 //        return R.success("管理员权限授权成功");
 //    }
 
-    //后台-管理员修改管理员授权页面，获取管理员已授权页面
-    @RequestMapping("/getAdminPage/{userid}")
-    @ResponseBody
-    public Result getAdminPage(@PathVariable String userid) {
-        Map map = new HashMap();
-        String sql = "select t.* from t_admin_page_app t where t.userid=?";
-        List<Map<String, Object>> list = this.jdbc.queryForList(sql, userid);
-        map.put("app", list);
-        sql = "select t.* from t_admin_page_admin t where t.userid=?";
-        list = this.jdbc.queryForList(sql, userid);
-        map.put("admin", list);
-        return R.success("管理员已授权页面", map);
-    }
 
 //    //后台-管理员修改管理员授权页面
 //    @RequestMapping("/updateAdminPage")
