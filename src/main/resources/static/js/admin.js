@@ -97,8 +97,13 @@ app.controller('thumbCtrl', function ($scope, $http) {
     $scope.getCategory = function () {
         $scope.search.loading = layer.load();
         $http.post('/api/common/getCategory').success(function (data) {
-            $scope.category = data.data;
-            $scope.category.unshift({id: -1, cat_name: '全部'});
+            $scope.categoryOfSearch = [];
+            $scope.categoryOfModal = [];
+            data.data.forEach(function (x) {
+                $scope.categoryOfSearch.push(x);
+                $scope.categoryOfModal.push(x);
+            })
+            $scope.categoryOfSearch.unshift({id: -1, cat_name: '全部'});
         });
     };
     $scope.get = function () {
@@ -127,16 +132,8 @@ app.controller('thumbCtrl', function ($scope, $http) {
     };
     $scope.showAddModal = function () {
         $scope.model = window.Util.copyObject($scope.pageModel);
-        layui.laydate.render({
-            elem: '#date',
-            type: 'datetime',
-            value: $scope.model.time_start = window.Util.dateToYYYYMMDDHHMMSS(new Date()),
-            done: function (value, date, endDate) {
-                $scope.model.time_start = value;
-            }
-        });
         $scope.index = layer.open({
-            title: '添加生产计划',
+            title: '添加图片',
             type: 1,
             content: $('#modal'),
             shade: 0,
@@ -146,20 +143,10 @@ app.controller('thumbCtrl', function ($scope, $http) {
             resize: false,
         });
     };
-    $scope.calculateEndTime = function () {
-        if (window.Util.isNull($scope.model.count_plan) || $scope.model.count_plan == 0 ||
-            window.Util.isNull($scope.model.extra_hour) ||
-            window.Util.isNull($scope.model.speed) || $scope.model.speed == 0) {
-            layer.msg('数据错误，无法计算');
-            return;
-        }
-        var timestamp = window.Util.stringToDate($scope.model.time_start).getTime();
-        timestamp += $scope.model.extra_hour * 3600 * 1000;
-        timestamp += $scope.model.count_plan / $scope.model.speed * 3600 * 1000;
-        $scope.model.time_end = window.Util.dateToYYYYMMDDHHMMSS(new Date(timestamp));
-    };
     $scope.add = function () {
-        $scope.calculateEndTime();
+        console.log($scope.model);
+        layer.msg('需求确定中');
+        return;
         if (window.Util.isNull($scope.model.model) ||
             window.Util.isNull($scope.model.order) ||
             window.Util.isNull($scope.model.batch) ||
@@ -205,7 +192,6 @@ app.controller('thumbCtrl', function ($scope, $http) {
         });
     };
     $scope.edit = function () {
-        $scope.calculateEndTime();
         if (window.Util.isNull($scope.model.line) ||
             window.Util.isNull($scope.model.card) ||
             window.Util.isNull($scope.model.count_plan) || $scope.model.count_plan == 0 ||
@@ -334,20 +320,9 @@ app.controller('thumbCtrl', function ($scope, $http) {
     };
     $scope.pageModel = {
         id: null,
-        model: null,
-        order: null,
-        batch: null,
-        line: null,
-        card: null,
-        count_plan: null,
-        count_finish: null,
-        time_start: null,
-        time_end: null,
-        extra_hour: null,
-        speed: null,
-        step: null,
-        mark_plan: null,
-        mark_finish: null,
+        cat_id: null,
+        title: null,
+        tags: null,
     };
     $scope.reset = function () {
         $scope.url = 'http://image.mn52.com/img';
