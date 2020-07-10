@@ -5,9 +5,13 @@ app.config(function ($routeProvider) {
             templateUrl: '/admin/thumb',
             controller: 'thumbCtrl'
         })
-        .when('/user', {
-            templateUrl: '/admin/user/user',
-            controller: 'thumbCtrl'
+        .when('/category', {
+            templateUrl: '/admin/category',
+            controller: 'categoryCtrl'
+        })
+        .when('/tag', {
+            templateUrl: '/admin/tag',
+            controller: 'tagCtrl'
         })
         .when('/welcome', {
             templateUrl: '/admin/welcome'
@@ -22,7 +26,10 @@ app.config(function ($routeProvider) {
 app.run(function ($rootScope, $http, $location) {
     var systemPage = ['#/welcome', '#/password'];
     var pages = [
-        {id: 1, name: '图片管理', sort: 1, group_name: '图片管理', group_sort: 1, image: 'empty.jpg', path: '#/thumb'},
+        {id: 1, name: '图集管理', sort: 1, group_name: '图集管理', group_sort: 1, image: 'empty.jpg', path: '#/thumb'},
+        {id: 2, name: '类别管理', sort: 2, group_name: '图集管理', group_sort: 2, image: 'empty.jpg', path: '#/category'},
+        {id: 3, name: '标签管理', sort: 3, group_name: '图集管理', group_sort: 3, image: 'empty.jpg', path: '#/tag'},
+        {id: 4, name: '友情链接', sort: 1, group_name: '友情链接', group_sort: 1, image: 'empty.jpg', path: '#/link'},
     ];
     $rootScope.getAdmin = function () {
         $http.post('/admin/getAdmin').success(function (data) {
@@ -133,7 +140,7 @@ app.controller('thumbCtrl', function ($scope, $http) {
     $scope.showAddModal = function () {
         $scope.model = window.Util.copyObject($scope.pageModel);
         $scope.index = layer.open({
-            title: '添加图片',
+            title: '添加图集',
             type: 1,
             content: $('#modal'),
             shade: 0,
@@ -333,4 +340,122 @@ app.controller('thumbCtrl', function ($scope, $http) {
         $scope.get();
     };
     $scope.reset();
+});
+app.controller('categoryCtrl', function ($scope, $http) {
+    $scope.get = function () {
+        $scope.search.loading = layer.load();
+        $http.post('/api/getCategory', $scope.search).success(function (data) {
+            layer.close($scope.search.loading);
+            $scope.data = data.data;
+            $scope.makePage(data);
+        });
+    };
+    $scope.showAddModal = function () {
+        $scope.model = window.Util.copyObject($scope.pageModel);
+        $scope.index = layer.open({
+            title: '添加类别',
+            type: 1,
+            content: $('#modal'),
+            shade: 0,
+            area: '600px',
+            maxHeight: 500,
+            move: false,
+            resize: false,
+        });
+    };
+    $scope.add = function () {
+        if (window.Util.isNull($scope.model.cat_url) ||
+            window.Util.isNull($scope.model.cat_name) ||
+            window.Util.isNull($scope.model.seotitle) ||
+            window.Util.isNull($scope.model.keywords) ||
+            window.Util.isNull($scope.model.description)) {
+            layer.msg('请完善信息');
+            return;
+        }
+        $http.post('/api/addCategory', $scope.model).success(function (data) {
+            layer.msg(data.message);
+            if (data.success) {
+                $scope.get();
+                $scope.closeModal();
+            }
+        });
+    };
+    $scope.showEditModal = function (e) {
+        $scope.model = e;
+        $scope.index = layer.open({
+            title: '修改类别',
+            type: 1,
+            content: $('#modal'),
+            shade: 0,
+            area: '600px',
+            maxHeight: 500,
+            move: false,
+            resize: false,
+        });
+    };
+    $scope.edit = function () {
+        if (window.Util.isNull($scope.model.line) ||
+            window.Util.isNull($scope.model.card) ||
+            window.Util.isNull($scope.model.count_plan) || $scope.model.count_plan == 0 ||
+            window.Util.isNull($scope.model.time_start) ||
+            window.Util.isNull($scope.model.time_end) ||
+            window.Util.isNull($scope.model.extra_hour) ||
+            window.Util.isNull($scope.model.speed) || $scope.model.speed == 0) {
+            layer.msg('请完善生产计划信息');
+            return;
+        }
+        $http.post('/api/updatePatchPlan', $scope.model).success(function (data) {
+            layer.msg(data.message);
+            if (data.success) {
+                $scope.get();
+                $scope.closeModal();
+            }
+        });
+    };
+    $scope.closeModal = function () {
+        layer.close($scope.index);
+    };
+    $scope.delete = function (e) {
+        layer.confirm('此操作将删除生产计划', null, function () {
+            $http.post(`/api/deletePatchPlan/${e.id}`).success(function (data) {
+                layer.msg(data.message);
+                if (data.success) {
+                    $scope.get();
+                }
+            });
+        });
+    };
+    $scope.makePage = function (data) {
+        layui.laypage.render({
+            elem: 'page',
+            count: data.count,
+            curr: $scope.search.page,
+            limit: $scope.search.limit,
+            limits: [10, 20, 30, 40, 50],
+            layout: ['prev', 'page', 'next', 'count', 'limit'],
+            jump: function (obj, first) {
+                $scope.search.page = obj.curr;
+                $scope.search.limit = obj.limit;
+                if (!first) {
+                    $scope.get();
+                }
+            }
+        });
+    };
+    $scope.pageModel = {
+        id: null,
+        cat_url: null,
+        cat_name: null,
+        seotitle: null,
+        keywords: null,
+        description: null,
+    };
+    $scope.reset = function () {
+        $scope.search = window.Util.getSearchObject();
+        $scope.model = window.Util.copyObject($scope.pageModel);
+        $scope.get();
+    };
+    $scope.reset();
+});
+app.controller('tagCtrl', function ($scope, $http) {
 });

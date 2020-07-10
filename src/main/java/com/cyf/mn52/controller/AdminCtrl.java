@@ -94,34 +94,14 @@ public class AdminCtrl {
         return "admin/thumb";
     }
 
-    @RequestMapping("/user/user")
+    @RequestMapping("/category")
     public String user() {
-        return "admin/user/user";
+        return "admin/category";
     }
 
-    @RequestMapping("/user/admin")
+    @RequestMapping("/tag")
     public String admin() {
-        return "admin/user/admin";
-    }
-
-    @RequestMapping("/addjob/addjobrecord")
-    public String addjobrecord() {
-        return "admin/addjob/addjobrecord";
-    }
-
-    @RequestMapping("/addjob/addjobstatistic")
-    public String addjobstatistic() {
-        return "admin/addjob/addjobstatistic";
-    }
-
-    @RequestMapping("/produce/patchplan")
-    public String patchplan() {
-        return "admin/produce/patchplan";
-    }
-
-    @RequestMapping("/produce/boardplan")
-    public String boardplan() {
-        return "admin/produce/boardplan";
+        return "admin/tag";
     }
     //endregion
 

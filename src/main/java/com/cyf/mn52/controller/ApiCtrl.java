@@ -31,8 +31,8 @@ public class ApiCtrl {
         return R.success("ok", message);
     }
 
-    //region 图片管理
-    //后台-管理员查看图片列表(带tag)
+    //region 图集管理
+    //后台-管理员查看图集列表(带tag)
     @RequestMapping("/getThumb")
     @ResponseBody
     public Result getThumb(@RequestBody Search model) {
@@ -49,19 +49,19 @@ public class ApiCtrl {
         sql1 += " group by t1.id order by t1.created_at desc limit " + UtilPage.getPage(model);
         List<Map<String, Object>> list = this.jdbc.queryForList(sql1);
         int count = this.jdbc.queryForObject(sql2, Integer.class);
-        return R.success("图片列表", count, list);
+        return R.success("图集列表", count, list);
     }
 
-    //后台-管理员查看子图片
+    //后台-管理员查看图集内容
     @RequestMapping("/getThumbGallery/{id}")
     @ResponseBody
     public Result getThumbGallery(@PathVariable String id) {
         String sql = "select t.* from mn_gallery t where t.thumb_unique_id=?";
         List<Map<String, Object>> list = this.jdbc.queryForList(sql, id);
-        return R.success("子图片列表", list);
+        return R.success("图集内容列表", list);
     }
 
-    //后台-管理员添加图片
+    //后台-管理员添加图集
     @RequestMapping("/addThumb")
     @ResponseBody
     public Result addThumb(@RequestBody Thumb model, @RequestParam("file") MultipartFile[] files) {
@@ -85,6 +85,51 @@ public class ApiCtrl {
 //            count = this.jdbc.update(sql, model.userid, id);
 //        }
         return R.success("管理员权限授权成功");
+    }
+    //endregion
+
+    //region 类别管理
+    //后台-管理员查看类别列表
+    @RequestMapping("/getCategory")
+    @ResponseBody
+    public Result getCategory(@RequestBody Search model) {
+        String sql1 = "select t.* from mn_category t where t.status<>-2 order by t.id desc limit " + UtilPage.getPage(model);
+        String sql2 = "select count(*) from mn_category t where t.status<>-2";
+        List<Map<String, Object>> list = this.jdbc.queryForList(sql1);
+        int count = this.jdbc.queryForObject(sql2, Integer.class);
+        return R.success("类别列表", count, list);
+    }
+
+    //后台-管理员添加类别
+    @RequestMapping("/addCategory")
+    @ResponseBody
+    public Result addCategory(@RequestBody Category model) {
+        String sql = "select count(*) from mn_category t where t.status<>-2 and t.cat_name=?";
+        int count = this.jdbc.queryForObject(sql, Integer.class, model.cat_name);
+        if (count >= 1) {
+            return R.error("该类别已存在");
+        }
+        sql = "insert into mn_category(old_id,cat_url,parent_cat_url,cat_name,parent_name,seotitle,keywords,description,status,order_sn,thumb_ids,created_at,updated_at) values(?,?,?,?,?,?,?,?,?,?,?,now(),now())";
+        count = this.jdbc.update(sql, 0, model.cat_url, "", model.cat_name, "", model.seotitle, model.keywords, model.description, 1, 0, "");
+        return R.success("类别添加成功");
+    }
+
+    //后台-管理员更新类别
+    @RequestMapping("/updateCategory")
+    @ResponseBody
+    public Result updateCategory(@RequestBody Category model) {
+        String sql = "update mn_category t set=t.cat_url=?,t.cat_name=?,t.seotitle=?,t.keywords=?,t.description=? where t.id=?";
+        int count = this.jdbc.update(sql, model.cat_url, model.cat_name, model.seotitle, model.keywords, model.description, model.id);
+        return R.success("类别更新成功");
+    }
+
+    //后台-管理员删除类别
+    @RequestMapping("/updateCategoryState")
+    @ResponseBody
+    public Result updateCategoryState(int id, int state) {
+        String sql = "update mn_category t set=t.status=? where t.id=?";
+        int count = this.jdbc.update(sql, state, id);
+        return R.success("类别状态更新成功");
     }
     //endregion
 }
