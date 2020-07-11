@@ -103,6 +103,11 @@ public class AdminCtrl {
     public String admin() {
         return "admin/tag";
     }
+
+    @RequestMapping("/ad")
+    public String ad() {
+        return "admin/ad";
+    }
     //endregion
 
 }

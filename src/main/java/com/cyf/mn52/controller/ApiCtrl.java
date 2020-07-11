@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -118,18 +119,70 @@ public class ApiCtrl {
     @RequestMapping("/updateCategory")
     @ResponseBody
     public Result updateCategory(@RequestBody Category model) {
-        String sql = "update mn_category t set=t.cat_url=?,t.cat_name=?,t.seotitle=?,t.keywords=?,t.description=? where t.id=?";
+        String sql = "update mn_category t set t.cat_url=?,t.cat_name=?,t.seotitle=?,t.keywords=?,t.description=? where t.id=?";
         int count = this.jdbc.update(sql, model.cat_url, model.cat_name, model.seotitle, model.keywords, model.description, model.id);
         return R.success("类别更新成功");
     }
 
     //后台-管理员删除类别
-    @RequestMapping("/updateCategoryState")
+    @RequestMapping("/updateCategoryState/{id}/{state}")
     @ResponseBody
-    public Result updateCategoryState(int id, int state) {
-        String sql = "update mn_category t set=t.status=? where t.id=?";
+    public Result updateCategoryState(@PathVariable int id, @PathVariable int state) {
+        String sql = "update mn_category t set t.status=? where t.id=?";
         int count = this.jdbc.update(sql, state, id);
         return R.success("类别状态更新成功");
     }
     //endregion
+
+    //region 标签管理
+    //后台-管理员查看标签列表
+    @RequestMapping("/getTag")
+    @ResponseBody
+    public Result getTag(@RequestBody Search model) {
+        String sql1 = "select t1.*,count(*) thumb_count from mn_thumb_tag_id t right join mn_tags t1 on t.tag_id=t1.id where t1.status<>-2";
+        String sql2 = "select count(*) from mn_tags t where t.status<>-2";
+        if (!(model.string1 == null || model.string1.isEmpty())) {
+            sql1 += " and t1.tag like '%" + model.string1 + "%' ";
+            sql2 += " and t.tag like '%" + model.string1 + "%' ";
+        }
+        sql1 += " group by t1.id order by t1.id desc limit " + UtilPage.getPage(model);
+        List<Map<String, Object>> list = this.jdbc.queryForList(sql1);
+        int count = this.jdbc.queryForObject(sql2, Integer.class);
+        return R.success("标签列表", count, list);
+    }
+
+    //后台-管理员添加标签
+    @RequestMapping("/addTag")
+    @ResponseBody
+    public Result addTag(@RequestBody Tag model) {
+        String sql = "select count(*) from mn_tags t where t.status<>-2 and t.tag=?";
+        int count = this.jdbc.queryForObject(sql, Integer.class, model.tag);
+        if (count >= 1) {
+            return R.error("该标签已存在");
+        }
+        sql = "insert into mn_tags(unique_id,tag,order_sn,parent_id,seotitle,keywords,description,click,status,tpath,writer,editor,created_at,updated_at) values(?,?,?,?,?,?,?,?,?,?,?,?,now(),now())";
+        count = this.jdbc.update(sql, UUID.randomUUID().toString(), model.tag, 0, 0, model.seotitle, model.keywords, model.description, 0, 1, "", "", "");
+        return R.success("标签添加成功");
+    }
+
+    //后台-管理员更新标签
+    @RequestMapping("/updateTag")
+    @ResponseBody
+    public Result updateTag(@RequestBody Tag model) {
+        String sql = "update mn_tags t set t.tag=?,t.seotitle=?,t.keywords=?,t.description=? where t.id=?";
+        int count = this.jdbc.update(sql, model.tag, model.seotitle, model.keywords, model.description, model.id);
+        return R.success("标签更新成功");
+    }
+
+    //后台-管理员删除标签
+    @RequestMapping("/updateTagState/{id}/{state}")
+    @ResponseBody
+    public Result updateTagState(@PathVariable int id, @PathVariable int state) {
+        String sql = "update mn_tags t set t.status=? where t.id=?";
+        int count = this.jdbc.update(sql, state, id);
+        return R.success("标签状态更新成功");
+    }
+    //endregion
+
+
 }

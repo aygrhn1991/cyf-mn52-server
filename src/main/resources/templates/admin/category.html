@@ -20,8 +20,11 @@
         <td ng-bind="d.seotitle"></td>
         <td ng-bind="d.keywords"></td>
         <td ng-bind="d.description"></td>
-        <td>
+        <td style="width:130px;">
+            <button class="layui-btn layui-btn-xs" ng-if="d.status==-1" ng-click="editState(d,1)">上架</button>
+            <button class="layui-btn layui-btn-xs" ng-if="d.status==1" ng-click="editState(d,-1)">下架</button>
             <button class="layui-btn layui-btn-xs" ng-click="showEditModal(d)">修改</button>
+            <button class="layui-btn layui-btn-xs" ng-click="editState(d,-2)">删除</button>
         </td>
     </tr>
     </tbody>
@@ -62,13 +65,10 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" ng-if="!lock" ng-click="add()">新增</button>
-                    <button class="layui-btn" ng-if="lock" ng-click="edit()">保存</button>
+                    <button class="layui-btn" ng-if="model.id==null" ng-click="add()">新增</button>
+                    <button class="layui-btn" ng-if="model.id!=null" ng-click="edit()">保存</button>
                 </div>
             </div>
         </form>
-    </div>
-    <div id="modal-image" class="modal">
-        <img class="thumb thumb-inmodal" ng-src="{{url+d.thumb}}" ng-repeat="d in image">
     </div>
 </div>

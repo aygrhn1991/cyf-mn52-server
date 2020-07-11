@@ -1,1 +1,82 @@
-tag
+<form>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">标签</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" ng-model="search.string1">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn" ng-click="get()">搜索</button>
+            <button class="layui-btn" ng-click="reset()">重置</button>
+        </div>
+    </div>
+</form>
+<table class="layui-table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>标签名称</th>
+        <th>seo标题</th>
+        <th>seo关键字</th>
+        <th>seo描述</th>
+        <th>图集数量</th>
+        <th>
+            <button class="layui-btn layui-btn-xs" ng-click="showAddModal()">添加</button>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="d in data">
+        <td ng-bind="d.id"></td>
+        <td ng-bind="d.tag"></td>
+        <td ng-bind="d.seotitle"></td>
+        <td ng-bind="d.keywords"></td>
+        <td ng-bind="d.description"></td>
+        <td ng-bind="d.thumb_count"></td>
+        <td style="width:130px;">
+            <button class="layui-btn layui-btn-xs" ng-if="d.status==-1" ng-click="editState(d,1)">上架</button>
+            <button class="layui-btn layui-btn-xs" ng-if="d.status==1" ng-click="editState(d,-1)">下架</button>
+            <button class="layui-btn layui-btn-xs" ng-click="showEditModal(d)">修改</button>
+            <button class="layui-btn layui-btn-xs" ng-click="editState(d,-2)">删除</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div id="page"></div>
+<div class="modals">
+    <div id="modal" class="modal">
+        <form>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标签名称</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" type="text" ng-model="model.tag">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">seo标题</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" ng-model="model.seotitle"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">seo关键字</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" ng-model="model.keywords"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">seo描述</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" ng-model="model.description"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" ng-if="model.id==null" ng-click="add()">新增</button>
+                    <button class="layui-btn" ng-if="model.id!=null" ng-click="edit()">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

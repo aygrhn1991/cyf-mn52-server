@@ -10,7 +10,7 @@ public class Category {
     public String seotitle;
     public String keywords;
     public String description;
-    public int status;
+    public Object status;
     public int order_sn;
     public String thumb_ids;
     public String created_at;
