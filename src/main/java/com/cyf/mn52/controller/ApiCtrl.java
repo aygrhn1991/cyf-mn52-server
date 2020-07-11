@@ -184,5 +184,54 @@ public class ApiCtrl {
     }
     //endregion
 
+    //region 广告管理
+    //后台-管理员查看广告列表
+    @RequestMapping("/getAd")
+    @ResponseBody
+    public Result getAd(@RequestBody Search model) {
+        String sql1 = "select t.* from mn_ads t where t.status<>-2";
+        String sql2 = "select count(*) from mn_ads t where t.status<>-2";
+        if (!(model.string1 == null || model.string1.isEmpty())) {
+            String and = " and t.code like '%" + model.string1 + "%' ";
+            sql1 += and;
+            sql2 += and;
+        }
+        sql1 += " order by t.id desc limit " + UtilPage.getPage(model);
+        List<Map<String, Object>> list = this.jdbc.queryForList(sql1);
+        int count = this.jdbc.queryForObject(sql2, Integer.class);
+        return R.success("广告列表", count, list);
+    }
 
+    //后台-管理员添加广告
+    @RequestMapping("/addAd")
+    @ResponseBody
+    public Result addAd(@RequestBody Ad model) {
+        String sql = "select count(*) from mn_ads t where t.status<>-2 and t.code=?";
+        int count = this.jdbc.queryForObject(sql, Integer.class, model.code);
+        if (count >= 1) {
+            return R.error("该广告已存在");
+        }
+        sql = "insert into mn_ads(unique_id,status,position,code,position_desc,writer,editor,created_at,updated_at,ip) values(?,?,?,?,?,?,?,now(),now(),?)";
+        count = this.jdbc.update(sql, UUID.randomUUID().toString(), 1, "", model.code, model.position_desc, "", "", "");
+        return R.success("广告添加成功");
+    }
+
+    //后台-管理员更新广告
+    @RequestMapping("/updateAd")
+    @ResponseBody
+    public Result updateAd(@RequestBody Ad model) {
+        String sql = "update mn_ads t set t.code=?,t.position_desc=? where t.id=?";
+        int count = this.jdbc.update(sql, model.code, model.position_desc, model.id);
+        return R.success("广告更新成功");
+    }
+
+    //后台-管理员删除广告
+    @RequestMapping("/updateAdState/{id}/{state}")
+    @ResponseBody
+    public Result updateAdState(@PathVariable int id, @PathVariable int state) {
+        String sql = "update mn_ads t set t.status=? where t.id=?";
+        int count = this.jdbc.update(sql, state, id);
+        return R.success("广告状态更新成功");
+    }
+    //endregion
 }

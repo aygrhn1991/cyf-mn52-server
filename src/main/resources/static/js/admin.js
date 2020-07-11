@@ -573,7 +573,7 @@ app.controller('tagCtrl', function ($scope, $http) {
 app.controller('adCtrl', function ($scope, $http) {
     $scope.get = function () {
         $scope.search.loading = layer.load();
-        $http.post('/api/getTag', $scope.search).success(function (data) {
+        $http.post('/api/getAd', $scope.search).success(function (data) {
             layer.close($scope.search.loading);
             $scope.data = data.data;
             $scope.makePage(data);
@@ -582,7 +582,7 @@ app.controller('adCtrl', function ($scope, $http) {
     $scope.showAddModal = function () {
         $scope.model = window.Util.copyObject($scope.pageModel);
         $scope.index = layer.open({
-            title: '添加标签',
+            title: '添加广告',
             type: 1,
             content: $('#modal'),
             shade: 0,
@@ -593,14 +593,12 @@ app.controller('adCtrl', function ($scope, $http) {
         });
     };
     $scope.add = function () {
-        if (window.Util.isNull($scope.model.tag) ||
-            window.Util.isNull($scope.model.seotitle) ||
-            window.Util.isNull($scope.model.keywords) ||
-            window.Util.isNull($scope.model.description)) {
+        if (window.Util.isNull($scope.model.code) ||
+            window.Util.isNull($scope.model.position_desc)) {
             layer.msg('请完善信息');
             return;
         }
-        $http.post('/api/addTag', $scope.model).success(function (data) {
+        $http.post('/api/addAd', $scope.model).success(function (data) {
             layer.msg(data.message);
             if (data.success) {
                 $scope.get();
@@ -611,7 +609,7 @@ app.controller('adCtrl', function ($scope, $http) {
     $scope.showEditModal = function (e) {
         $scope.model = e;
         $scope.index = layer.open({
-            title: '修改标签',
+            title: '修改广告',
             type: 1,
             content: $('#modal'),
             shade: 0,
@@ -622,14 +620,12 @@ app.controller('adCtrl', function ($scope, $http) {
         });
     };
     $scope.edit = function () {
-        if (window.Util.isNull($scope.model.tag) ||
-            window.Util.isNull($scope.model.seotitle) ||
-            window.Util.isNull($scope.model.keywords) ||
-            window.Util.isNull($scope.model.description)) {
+        if (window.Util.isNull($scope.model.code) ||
+            window.Util.isNull($scope.model.position_desc)) {
             layer.msg('请完善信息');
             return;
         }
-        $http.post('/api/updateTag', $scope.model).success(function (data) {
+        $http.post('/api/updateAd', $scope.model).success(function (data) {
             layer.msg(data.message);
             if (data.success) {
                 $scope.get();
@@ -641,8 +637,8 @@ app.controller('adCtrl', function ($scope, $http) {
         layer.close($scope.index);
     };
     $scope.editState = function (e, f) {
-        layer.confirm('此操作将更改标签状态', null, function () {
-            $http.post(`/api/updateTagState/${e.id}/${f}`).success(function (data) {
+        layer.confirm('此操作将更改广告状态', null, function () {
+            $http.post(`/api/updateAdState/${e.id}/${f}`).success(function (data) {
                 layer.msg(data.message);
                 if (data.success) {
                     $scope.get();
@@ -669,10 +665,8 @@ app.controller('adCtrl', function ($scope, $http) {
     };
     $scope.pageModel = {
         id: null,
-        tag: null,
-        seotitle: null,
-        keywords: null,
-        description: null,
+        code: null,
+        position_desc: null,
     };
     $scope.reset = function () {
         $scope.search = window.Util.getSearchObject();

@@ -1,1 +1,64 @@
-ad
+<form>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">标签</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input" ng-model="search.string1">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn" ng-click="get()">搜索</button>
+            <button class="layui-btn" ng-click="reset()">重置</button>
+        </div>
+    </div>
+</form>
+<table class="layui-table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>广告代码</th>
+        <th>位置描述(url)</th>
+        <th>
+            <button class="layui-btn layui-btn-xs" ng-click="showAddModal()">添加</button>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="d in data">
+        <td ng-bind="d.id"></td>
+        <td ng-bind="d.code"></td>
+        <td ng-bind="d.position_desc"></td>
+        <td style="width:130px;">
+            <button class="layui-btn layui-btn-xs" ng-if="d.status==-1" ng-click="editState(d,1)">上架</button>
+            <button class="layui-btn layui-btn-xs layui-bg-red" ng-if="d.status==1" ng-click="editState(d,-1)">下架</button>
+            <button class="layui-btn layui-btn-xs" ng-click="showEditModal(d)">修改</button>
+            <button class="layui-btn layui-btn-xs" ng-click="editState(d,-2)">删除</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<div id="page"></div>
+<div class="modals">
+    <div id="modal" class="modal">
+        <form>
+            <div class="layui-form-item">
+                <label class="layui-form-label">广告代码</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" type="text" ng-model="model.code">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">位置描述(url)</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" ng-model="model.position_desc"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" ng-if="model.id==null" ng-click="add()">新增</button>
+                    <button class="layui-btn" ng-if="model.id!=null" ng-click="edit()">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
