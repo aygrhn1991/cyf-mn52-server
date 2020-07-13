@@ -4,7 +4,10 @@ import com.cyf.mn52.model.*;
 import com.cyf.mn52.suit.request.Search;
 import com.cyf.mn52.suit.response.R;
 import com.cyf.mn52.suit.response.Result;
+import com.cyf.mn52.suit.util.UtilDate;
+import com.cyf.mn52.suit.util.UtilFile;
 import com.cyf.mn52.suit.util.UtilPage;
+import com.cyf.mn52.util.OSSHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +15,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.io.File;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -26,6 +27,9 @@ public class ApiCtrl {
 
     @Autowired
     private JdbcTemplate jdbc;
+
+    @Autowired
+    private OSSHelper ossHelper;
 
     @RequestMapping("/test/{message}")
     public Result test(@PathVariable String message) {
@@ -65,27 +69,36 @@ public class ApiCtrl {
     //后台-管理员添加图集
     @RequestMapping("/addThumb")
     @ResponseBody
-    public Result addThumb(@RequestBody Thumb model, @RequestParam("file") MultipartFile[] files) {
-//        String sql = "select count(*) from t_admin t where t.userid=?";
-//        int count = this.jdbc.queryForObject(sql, Integer.class, model.userid);
-//        if (count >= 1) {
-//            return R.error("该员工已授权过管理员权限");
-//        }
-//        sql = "insert into t_admin(userid,password,state,systime) values(?,'123456',?,now())";
-//        count = this.jdbc.update(sql, model.userid, UserStateEnum.active.ordinal());
-//        sql = "delete from t_admin_page_admin where userid=?";
-//        count = this.jdbc.update(sql, model.userid);
-//        for (int id : model.adminIds) {
-//            sql = "insert into t_admin_page_admin(userid,page_id) values(?,?)";
-//            count = this.jdbc.update(sql, model.userid, id);
-//        }
-//        sql = "delete from t_admin_page_app where userid=?";
-//        count = this.jdbc.update(sql, model.userid);
-//        for (int id : model.appIds) {
-//            sql = "insert into t_admin_page_app(userid,page_id) values(?,?)";
-//            count = this.jdbc.update(sql, model.userid, id);
-//        }
-        return R.success("管理员权限授权成功");
+    public Result addThumb(Thumb model, @RequestParam("file") MultipartFile file, @RequestParam("files") MultipartFile[] files) throws Exception {
+        String folder = UtilDate.dateToYYYYMMDD(new Date());
+        List<String> ossFileName = new ArrayList<>();
+        List<File> ossFile = new ArrayList<>();
+        ossFileName.add("allimg/" + folder + "/" + UUID.randomUUID().toString() + "_" + file.getOriginalFilename());
+        ossFile.add(UtilFile.multipartFileToFile(file));
+        for (int i = 0; i < files.length; i++) {
+            ossFileName.add("allimg/" + folder + "/" + UUID.randomUUID().toString() + "_" + files[i].getOriginalFilename());
+            ossFile.add(UtilFile.multipartFileToFile(files[i]));
+        }
+        model.thumb = "/" + ossFileName.get(0);
+        boolean upload = this.ossHelper.upload(ossFileName, ossFile);
+        if (upload) {
+            int length = files.length;
+            String sql = "select * from mn_category t where t.id=?";
+            List<Map<String, Object>> list = this.jdbc.queryForList(sql, model.cat_id);
+            sql = "insert into mn_thumbs(unique_id,cat_id,cat_url,cat_name,title,seotitle,keywords,description,viewer,upvote,writer,thumb,created_at,updated_at) values(?,?,?,?,?,?,?,?,?,?,?,?,now(),now())";
+            int count = this.jdbc.update(sql,
+                    UUID.randomUUID().toString(),
+                    model.cat_id,
+                    list.get(0).get("cat_url").toString().equals("txg") ? "txj" : list.get(0).get("cat_url").toString(),
+                    list.get(0).get("cat_name").toString(),
+                    model.title,
+                    model.title + "- mn52图片",
+                    model.title + "- mn52图片",
+                    model.title + "- mn52图片",
+                    0, 0, "lisays", model.thumb);
+            return R.success("图集上传成功");
+        }
+        return R.error("图集上传失败");
     }
     //endregion
 

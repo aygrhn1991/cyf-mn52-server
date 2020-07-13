@@ -155,8 +155,25 @@ app.controller('thumbCtrl', function ($scope, $http) {
         });
     };
     $scope.add = function () {
-        console.log($scope.model);
-        layer.msg('需求确定中');
+        var formData = new FormData();
+        formData.append('cat_id', $scope.model.cat_id);
+        formData.append('title', $scope.model.title);
+        formData.append('tag', $scope.model.tag);
+        formData.append('file', $('#cover')[0].files[0]);
+        for (var i = 0; i < $('#img')[0].files.length; i++) {
+            formData.append('files', $('#img')[0].files[i]);
+        }
+        $.ajax({
+            type: 'post',
+            url: '/api/addThumb',
+            contentType: false,
+            processData: false,
+            dataType: 'json',//收到服务器数据的格式
+            data: formData,
+            success: function (data) {
+                layer.msg(data.message);
+            },
+        })
         return;
         if (window.Util.isNull($scope.model.model) ||
             window.Util.isNull($scope.model.order) ||
