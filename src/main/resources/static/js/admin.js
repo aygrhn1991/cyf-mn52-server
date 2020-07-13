@@ -155,6 +155,12 @@ app.controller('thumbCtrl', function ($scope, $http) {
         });
     };
     $scope.add = function () {
+        if (window.Util.isNull($scope.model.cat_id) ||
+            window.Util.isNull($scope.model.title) ||
+            window.Util.isNull($scope.model.tag)) {
+            layer.msg('请完图集信息');
+            return;
+        }
         var formData = new FormData();
         formData.append('cat_id', $scope.model.cat_id);
         formData.append('title', $scope.model.title);
@@ -172,29 +178,12 @@ app.controller('thumbCtrl', function ($scope, $http) {
             data: formData,
             success: function (data) {
                 layer.msg(data.message);
+                if (data.success) {
+                    $scope.get();
+                    $scope.closeModal();
+                }
             },
         })
-        return;
-        if (window.Util.isNull($scope.model.model) ||
-            window.Util.isNull($scope.model.order) ||
-            window.Util.isNull($scope.model.batch) ||
-            window.Util.isNull($scope.model.line) ||
-            window.Util.isNull($scope.model.card) ||
-            window.Util.isNull($scope.model.count_plan) || $scope.model.count_plan == 0 ||
-            window.Util.isNull($scope.model.time_start) ||
-            window.Util.isNull($scope.model.time_end) ||
-            window.Util.isNull($scope.model.extra_hour) ||
-            window.Util.isNull($scope.model.speed) || $scope.model.speed == 0) {
-            layer.msg('请完善生产计划信息');
-            return;
-        }
-        $http.post('/api/addPatchPlan', $scope.model).success(function (data) {
-            layer.msg(data.message);
-            if (data.success) {
-                $scope.get();
-                $scope.closeModal();
-            }
-        });
     };
     $scope.showEditModal = function (e) {
         e.time_start = window.Util.dateToYYYYMMDDHHMMSS(new Date(e.time_start));
