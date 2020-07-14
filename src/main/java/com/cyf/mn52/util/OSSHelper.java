@@ -25,7 +25,7 @@ public class OSSHelper {
         try {
             OSS ossClient = new OSSClientBuilder().build(this.endPoint, this.accessKeyId, this.accessKeySecret);
             for (int i = 0; i < fileName.size(); i++) {
-                PutObjectRequest putObjectRequest = new PutObjectRequest(this.bucketName, "img/" + fileName.get(i), file.get(i));
+                PutObjectRequest putObjectRequest = new PutObjectRequest(this.bucketName, "img" + fileName.get(i), file.get(i));
                 ossClient.putObject(putObjectRequest);
             }
             ossClient.shutdown();

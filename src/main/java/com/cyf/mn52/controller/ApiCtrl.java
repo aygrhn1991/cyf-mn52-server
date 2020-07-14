@@ -8,12 +8,14 @@ import com.cyf.mn52.suit.util.UtilDate;
 import com.cyf.mn52.suit.util.UtilFile;
 import com.cyf.mn52.suit.util.UtilPage;
 import com.cyf.mn52.util.OSSHelper;
+import org.hashids.Hashids;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import sun.swing.SwingLazyValue;
 
 import java.io.File;
 import java.util.*;
@@ -73,29 +75,58 @@ public class ApiCtrl {
         String folder = UtilDate.dateToYYYYMMDD(new Date());
         List<String> ossFileName = new ArrayList<>();
         List<File> ossFile = new ArrayList<>();
-        ossFileName.add("allimg/" + folder + "/" + UUID.randomUUID().toString() + "_" + file.getOriginalFilename());
+        ossFileName.add("/allimg/" + folder + "/" + UUID.randomUUID().toString() + "_" + file.getOriginalFilename());
         ossFile.add(UtilFile.multipartFileToFile(file));
         for (int i = 0; i < files.length; i++) {
-            ossFileName.add("allimg/" + folder + "/" + UUID.randomUUID().toString() + "_" + files[i].getOriginalFilename());
+            ossFileName.add("/allimg/" + folder + "/" + UUID.randomUUID().toString() + "_" + files[i].getOriginalFilename());
             ossFile.add(UtilFile.multipartFileToFile(files[i]));
         }
-        model.thumb = "/" + ossFileName.get(0);
         boolean upload = this.ossHelper.upload(ossFileName, ossFile);
         if (upload) {
-            int length = files.length;
+            //先创建个thumb的unique_id
+            String thumb_unique_id = UUID.randomUUID().toString();
+            //查出对应的类别信息
             String sql = "select * from mn_category t where t.id=?";
-            List<Map<String, Object>> list = this.jdbc.queryForList(sql, model.cat_id);
+            List<Map<String, Object>> categoryList = this.jdbc.queryForList(sql, model.cat_id);
+            //添加gallery
+            for (int i = 1; i <= files.length; i++) {
+                sql = "insert into mn_gallery(thumb_unique_id,image_unique_id,thumb,status,writer,size,source,editor,created_at,updated_at) values(?,?,?,?,?,?,?,?,now(),now())";
+                int count = this.jdbc.update(sql, thumb_unique_id, UUID.randomUUID().toString(), ossFileName.get(i), 1, "lisays", "", "", "");
+            }
+            //准备工作完成，正式开始添加thumb
             sql = "insert into mn_thumbs(unique_id,cat_id,cat_url,cat_name,title,seotitle,keywords,description,viewer,upvote,writer,thumb,created_at,updated_at) values(?,?,?,?,?,?,?,?,?,?,?,?,now(),now())";
-            int count = this.jdbc.update(sql,
-                    UUID.randomUUID().toString(),
-                    model.cat_id,
-                    list.get(0).get("cat_url").toString().equals("txg") ? "txj" : list.get(0).get("cat_url").toString(),
-                    list.get(0).get("cat_name").toString(),
-                    model.title,
-                    model.title + "- mn52图片",
-                    model.title + "- mn52图片",
-                    model.title + "- mn52图片",
-                    0, 0, "lisays", model.thumb);
+            int count = this.jdbc.update(sql, thumb_unique_id, model.cat_id, categoryList.get(0).get("cat_url").toString().equals("txg") ? "txj" : categoryList.get(0).get("cat_url").toString(), categoryList.get(0).get("cat_name").toString(), model.title, model.title + "- mn52图片", model.title + "- mn52图片", model.title + "- mn52图片", 0, 0, "lisays", ossFileName.get(0).toString());
+            sql = "select * from mn_thumbs t where t.unique_id=?";
+            List<Map<String, Object>> thumbInsert = this.jdbc.queryForList(sql, thumb_unique_id);
+            int thumb_id = Integer.parseInt(thumbInsert.get(0).get("id").toString());
+            //更新一下shortened_id
+            Hashids hashids = new Hashids("mn52000");
+            sql = "update mn_thumbs t set t.shortened_id=? where t.id=?";
+            count = this.jdbc.update(sql, hashids.encode(thumb_id), thumb_id);
+            //添加tag,为什么放这处理，因为傻逼设计的数据库只能这么做
+            String[] tagList = model.tag.split(",");
+            for (String tag : tagList) {
+                sql = "select * from mn_tags t where t.tag=?";
+                List<Map<String, Object>> tagExistList = this.jdbc.queryForList(sql, tag);
+                int tag_id = 0;
+                if (tagExistList.size() == 0) {
+                    sql = "insert into mn_tags(unique_id,tag,order_sn,parent_id,seotitle,keywords,description,click,status,tpath,writer,editor,created_at,updated_at) values(?,?,?,?,?,?,?,?,?,?,?,?,now(),now())";
+                    count = this.jdbc.update(sql,
+                            UUID.randomUUID().toString(),
+                            tag, 0, 0,
+                            tag + "图片," + tag + "写真集照片," + tag + "壁纸-mn52图片",
+                            tag + "图片-mn52图片",
+                            String.format("mn52图库私房专题页为您提供%s图片,%s写真集照片,%s壁纸等。希望你喜欢，找更多%s图片,%s写真集照片,%s壁纸就上mn52图库。", tag, tag, tag, tag, tag, tag),
+                            0, 1, "", "lisays", "");
+                    sql = "select * from mn_tags t where t.tag=?";
+                    List<Map<String, Object>> t = this.jdbc.queryForList(sql, tag);
+                    tag_id = Integer.parseInt(t.get(0).get("id").toString());
+                } else {
+                    tag_id = Integer.parseInt(tagExistList.get(0).get("id").toString());
+                }
+                sql = "insert into mn_thumb_tag_id(old_aid,tag,thumb_id,tag_id,cat_id,status,created_at,updated_at) values(?,?,?,?,?,?,now(),now())";
+                count = this.jdbc.update(sql, 0, tag, thumb_id, tag_id, model.cat_id, 1);
+            }
             return R.success("图集上传成功");
         }
         return R.error("图集上传失败");
