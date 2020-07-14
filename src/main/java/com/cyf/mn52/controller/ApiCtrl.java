@@ -100,7 +100,7 @@ public class ApiCtrl {
             List<Map<String, Object>> thumbInsert = this.jdbc.queryForList(sql, thumb_unique_id);
             int thumb_id = Integer.parseInt(thumbInsert.get(0).get("id").toString());
             //更新一下shortened_id
-            Hashids hashids = new Hashids("mn52000");
+            Hashids hashids = new Hashids("mn52000", 7);
             sql = "update mn_thumbs t set t.shortened_id=? where t.id=?";
             count = this.jdbc.update(sql, hashids.encode(thumb_id), thumb_id);
             //添加tag,为什么放这处理，因为傻逼设计的数据库只能这么做
