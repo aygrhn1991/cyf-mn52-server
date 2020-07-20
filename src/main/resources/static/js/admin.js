@@ -309,8 +309,8 @@ app.controller('thumbCtrl', function ($scope, $http) {
         layer.close($scope.index);
     };
     $scope.delete = function (e) {
-        layer.confirm('此操作将删除生产计划', null, function () {
-            $http.post(`/api/deletePatchPlan/${e.id}`).success(function (data) {
+        layer.confirm('此操作将删除图集', null, function () {
+            $http.post(`/api/deleteThumb/${e.id}`).success(function (data) {
                 layer.msg(data.message);
                 if (data.success) {
                     $scope.get();

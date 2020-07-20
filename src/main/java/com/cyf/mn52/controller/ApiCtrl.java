@@ -43,8 +43,8 @@ public class ApiCtrl {
     @RequestMapping("/getThumb")
     @ResponseBody
     public Result getThumb(@RequestBody Search model) {
-        String sql1 = "select t1.*,group_concat(t.tag) tags from mn_thumb_tag_id t right join mn_thumbs t1 on t.thumb_id=t1.id where 1=1";
-        String sql2 = "select count(*) from mn_thumbs t where 1=1";
+        String sql1 = "select t1.*,group_concat(t.tag) tags from mn_thumb_tag_id t right join mn_thumbs t1 on t.thumb_id=t1.id where 1=1 and t1.status=1";
+        String sql2 = "select count(*) from mn_thumbs t where 1=1 and t.status=1";
         if (!(model.string1 == null || model.string1.isEmpty())) {
             sql1 += " and t1.title like '%" + model.string1 + "%' ";
             sql2 += " and t.title like '%" + model.string1 + "%' ";
@@ -130,6 +130,13 @@ public class ApiCtrl {
             return R.success("图集上传成功");
         }
         return R.error("图集上传失败");
+    }
+    @RequestMapping("/deleteThumb/{id}")
+    @ResponseBody
+    public Result deleteThumb(@PathVariable int id) {
+        String sql = "update mn_thumbs t set t.status=-2 where t.id=?";
+        int count = this.jdbc.update(sql,id);
+        return R.success("操作成功");
     }
     //endregion
 
