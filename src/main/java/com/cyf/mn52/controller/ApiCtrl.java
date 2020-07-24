@@ -138,6 +138,13 @@ public class ApiCtrl {
         int count = this.jdbc.update(sql,id);
         return R.success("操作成功");
     }
+    @RequestMapping("/deleteImg/{id}")
+    @ResponseBody
+    public Result deleteImg(@PathVariable int id) {
+        String sql = "delete from mn_gallery where id=?";
+        int count = this.jdbc.update(sql,id);
+        return R.success("操作成功");
+    }
     //endregion
 
     //region 类别管理

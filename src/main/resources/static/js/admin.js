@@ -126,6 +126,7 @@ app.controller('thumbCtrl', function ($scope, $http) {
         });
     };
     $scope.showImageModal = function (e) {
+        $scope.model = e;
         $http.post(`/api/getThumbGallery/${e.unique_id}`).success(function (data) {
             $scope.image = data.data;
         });
@@ -318,6 +319,16 @@ app.controller('thumbCtrl', function ($scope, $http) {
             });
         });
     };
+    $scope.deleteImg = function (e) {
+        layer.confirm('此操作将删除图集', null, function () {
+            $http.post(`/api/deleteImg/${e.id}`).success(function (data) {
+                layer.msg(data.message);
+                if (data.success) {
+                    $scope.showImageModal($scope.model);
+                }
+            });
+        });
+    }
     $scope.makePage = function (data) {
         layui.laypage.render({
             elem: 'page',

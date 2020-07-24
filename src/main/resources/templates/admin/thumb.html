@@ -12,6 +12,7 @@
 
     .thumb-inmodal {
         margin: 10px 10px;
+        margin-bottom: 0px;
     }
 </style>
 <form>
@@ -108,6 +109,9 @@
         </form>
     </div>
     <div id="modal-image" class="modal">
-        <img class="thumb thumb-inmodal" ng-src="{{url+d.thumb}}" ng-repeat="d in image">
+        <div style="display: inline-block;" ng-repeat="d in image">
+            <img class="thumb thumb-inmodal" ng-src="{{url+d.thumb}}" >
+            <div style="color:red;text-align: center;cursor: pointer;" ng-click="deleteImg(d)">删除</div>
+        </div>
     </div>
 </div>
