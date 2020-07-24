@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header class="header">
+    <div>
+        采用th:replace方式进行布局
+    </div>
+</header>
+<div class="container" th:include="::content">页面正文内容</div>
+<footer class="footer">
+    <div>
+        <p style="float: left">&copy; Hylun 2017</p>
+        <p style="float: right">
+            Powered by <a href="http://my.oschina.net/alun" target="_blank">Alun</a>
+        </p>
+    </div>
+
+</footer>
+</body>
+</html>
