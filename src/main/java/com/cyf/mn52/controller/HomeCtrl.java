@@ -9,11 +9,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-//@CrossOrigin(origins = "*", maxAge = 3600)
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/home")
 public class HomeCtrl {
+
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
@@ -43,6 +48,22 @@ public class HomeCtrl {
     @RequestMapping("/tag")
     public String thumb() {
         return "home/tag";
+    }
+    //endregion
+
+    //region 页面
+    //导航(栏目)/置顶标签
+    @RequestMapping("/getLayoutData")
+    @ResponseBody
+    public Result getLayoutData() {
+        Map map = new HashMap();
+        String sql = "select t.* from mn_category t where t.state=1 order by t.sort desc";
+        List<Map<String, Object>> list = this.jdbc.queryForList(sql);
+        map.put("category", list);
+        sql = "select t.* from mn_tag t where t.state=1 and t.top=1";
+        list = this.jdbc.queryForList(sql);
+        map.put("tag", list);
+        return R.success("布局页数据", map);
     }
     //endregion
 }

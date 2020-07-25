@@ -2,23 +2,46 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>mn52-最懂你的图片站</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <!--    <link rel="stylesheet" href="/plugin/layui/css/layui.css"/>-->
+    <link rel="stylesheet" href="/css/home.css"/>
 </head>
-<body>
-<header class="header">
-    <div>
-        采用th:replace方式进行布局
-    </div>
-</header>
-<div class="container" th:include="::content">页面正文内容</div>
-<footer class="footer">
-    <div>
-        <p style="float: left">&copy; Hylun 2017</p>
-        <p style="float: right">
-            Powered by <a href="http://my.oschina.net/alun" target="_blank">Alun</a>
-        </p>
-    </div>
-
-</footer>
+<body ng-app="app" ng-controller="layoutCtrl">
+<div class="container">
+    <header>
+        <a class="logo">
+            <img src="/img/logo.png">
+        </a>
+        <ul class="nav">
+            <li><a>首页</a></li>
+            <li ng-repeat="d in nav"><a ng-bind="d.name"></a></li>
+        </ul>
+        <div class="search">
+            <select ng-options="x.id as x.name for x in category" ng-model="search.number1"></select>
+            <input type="text" placeholder="请输入搜索关键词">
+            <button>搜索</button>
+            <ul class="top-tag">
+                <li>推荐标签：</li>
+                <li ng-repeat="d in tag"><a class="tag" ng-bind="d.name"></a></li>
+            </ul>
+        </div>
+    </header>
+    <div class="container" th:include="::content">页面正文内容</div>
+    <footer class="footer">
+        <div>
+            <p style="float: left">&copy; Hylun 2017</p>
+            <p style="float: right">
+                Powered by <a href="http://my.oschina.net/alun" target="_blank">Alun</a>
+            </p>
+        </div>
+    </footer>
+</div>
+<script type="text/javascript" src="/plugin/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/plugin/angularjs/angular.min.js"></script>
+<script type="text/javascript" src="/plugin/layui/layui.all.js"></script>
+<script type="text/javascript" src="/plugin/util/util.js"></script>
+<script type="text/javascript" src="/js/home.js"></script>
 </body>
 </html>

@@ -1,0 +1,95 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+}
+
+*:focus {
+    outline: none;
+}
+
+a {
+    cursor: pointer;
+}
+
+header {
+    padding: 20px 0;
+}
+
+.container {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    display: inline-block;
+}
+
+.logo > img {
+    height: 60px;
+}
+
+.nav {
+    padding: 0;
+    list-style: none;
+}
+
+.nav > li {
+    display: inline-block;
+    padding: 5px 10px;
+}
+
+.search {
+    background: #FFF2F6;
+    padding: 30px 40px;
+}
+
+.search > select {
+    border: 1px solid #F0F3F6;
+    height: 40px;
+}
+
+.search > input {
+    position: relative;
+    top: -1px;
+    border: 1px solid #F0F3F6;
+    height: 36px;
+    text-indent: 1em;
+}
+
+.search > button {
+    height: 38px;
+    border: none;
+    color: #fff;
+    background: #F72D66;
+    padding: 0 10px;
+}
+
+.search > button:hover {
+    cursor: pointer;
+    background: #FFC107;
+}
+
+.top-tag {
+    float: right;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.top-tag > li {
+    display: inline-block;
+}
+
+.tag {
+    background: #F6F9FC;
+    display: inline-block;
+    padding: 0 10px;
+    margin: 0 5px 5px 0;
+    line-height: 34px;
+}
+
+.tag:hover {
+    color: #fff;
+    background: #FFC107;
+}
