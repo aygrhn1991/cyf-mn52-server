@@ -12,6 +12,10 @@ a {
     cursor: pointer;
 }
 
+hr {
+
+}
+
 header {
     padding: 20px 0;
 }
@@ -92,4 +96,29 @@ header {
 .tag:hover {
     color: #fff;
     background: #FFC107;
+}
+
+footer,
+footer a {
+    color: #727272;
+    font-size: 12px;
+    text-decoration: none;
+    line-height: 30px;
+}
+
+.copyright {
+    display: inline-block;
+    width: 50%;
+}
+
+.link {
+    display: inline-block;
+    width: 50%;
+    float: right;
+    text-align: right;
+}
+
+.link a {
+    display: inline-block;
+    margin-left: 20px;
 }

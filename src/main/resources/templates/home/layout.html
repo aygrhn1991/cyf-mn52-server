@@ -28,13 +28,28 @@
             </ul>
         </div>
     </header>
+    <hr color="#EBEEF1">
     <div class="container" th:include="::content">页面正文内容</div>
-    <footer class="footer">
-        <div>
-            <p style="float: left">&copy; Hylun 2017</p>
-            <p style="float: right">
-                Powered by <a href="http://my.oschina.net/alun" target="_blank">Alun</a>
-            </p>
+    <hr color="#EBEEF1">
+    <footer>
+        <div class="copyright">
+            <div>本站纯属免费美女图片欣赏网站，所有mm图片均收集于互联网。</div>
+            <div>如有侵犯版权,请来信告知,我们将立即更正。</div>
+            <div>Email：1127587445@qq.com&nbsp;&nbsp;QQ：1127587445</div>
+            <div>Copyright © 2006-<span ng-bind="nowYear"></span> mn52.com 版权所有</div>
+            <div><a href="http://www.beian.miit.gov.cn/">京ICP备15023835号-3</a></div>
+        </div>
+        <div class="link">
+            <div>
+                <a>首页</a>
+                <a ng-repeat="d in nav" ng-bind="d.name"></a>
+            </div>
+            <div>
+                <a>手机版</a>
+            </div>
+            <div>
+                <a>返回顶部</a>
+            </div>
         </div>
     </footer>
 </div>

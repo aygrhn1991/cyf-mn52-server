@@ -173,6 +173,7 @@ app.controller('layoutCtrl', function ($scope, $http) {
         tags: null,
     };
     $scope.reset = function () {
+        $scope.nowYear=new Date().getFullYear();
         $scope.getLayoutData();
         $scope.url = 'http://image.mn52.com/img';
         $scope.search = window.Util.getSearchObject();
