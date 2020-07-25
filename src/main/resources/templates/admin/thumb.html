@@ -12,6 +12,7 @@
 
     .thumb-inmodal {
         margin: 10px 10px;
+        margin-bottom: 0px;
     }
 </style>
 <form>
@@ -60,6 +61,7 @@
         <td ng-bind="d.created_at|date:'yyyy-MM-dd HH:mm:ss'"></td>
         <td>
             <button class="layui-btn layui-btn-xs" ng-click="showImageModal(d)">图片</button>
+            <button class="layui-btn layui-btn-xs" ng-click="showEditModal(d)">修改</button>
             <button class="layui-btn layui-btn-xs" ng-click="delete(d)">删除</button>
         </td>
     </tr>
@@ -108,6 +110,24 @@
         </form>
     </div>
     <div id="modal-image" class="modal">
-        <img class="thumb thumb-inmodal" ng-src="{{url+d.thumb}}" ng-repeat="d in image">
+        <div style="display: inline-block;" ng-repeat="d in image">
+            <img class="thumb thumb-inmodal" ng-src="{{url+d.thumb}}" >
+            <div style="color:red;text-align: center;cursor: pointer;" ng-click="deleteImg(d)">删除</div>
+        </div>
+    </div>
+    <div id="modal-edit" class="modal">
+        <form>
+            <div class="layui-form-item">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" type="text" ng-model="model.title">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn"  ng-click="edit()">保存</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

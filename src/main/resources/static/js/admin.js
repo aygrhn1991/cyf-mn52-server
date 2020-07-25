@@ -126,6 +126,7 @@ app.controller('thumbCtrl', function ($scope, $http) {
         });
     };
     $scope.showImageModal = function (e) {
+        $scope.model = e;
         $http.post(`/api/getThumbGallery/${e.unique_id}`).success(function (data) {
             $scope.image = data.data;
         });
@@ -186,21 +187,22 @@ app.controller('thumbCtrl', function ($scope, $http) {
         })
     };
     $scope.showEditModal = function (e) {
-        e.time_start = window.Util.dateToYYYYMMDDHHMMSS(new Date(e.time_start));
-        e.time_end = window.Util.dateToYYYYMMDDHHMMSS(new Date(e.time_end));
         $scope.model = e;
-        layui.laydate.render({
-            elem: '#date',
-            type: 'datetime',
-            value: e.time_start,
-            done: function (value, date, endDate) {
-                $scope.model.time_start = value;
-            }
-        });
+        // e.time_start = window.Util.dateToYYYYMMDDHHMMSS(new Date(e.time_start));
+        // e.time_end = window.Util.dateToYYYYMMDDHHMMSS(new Date(e.time_end));
+        // $scope.model = e;
+        // layui.laydate.render({
+        //     elem: '#date',
+        //     type: 'datetime',
+        //     value: e.time_start,
+        //     done: function (value, date, endDate) {
+        //         $scope.model.time_start = value;
+        //     }
+        // });
         $scope.index = layer.open({
-            title: '修改生产计划',
+            title: '修改图集信息',
             type: 1,
-            content: $('#modal'),
+            content: $('#modal-edit'),
             shade: 0,
             area: '600px',
             maxHeight: 500,
@@ -209,17 +211,11 @@ app.controller('thumbCtrl', function ($scope, $http) {
         });
     };
     $scope.edit = function () {
-        if (window.Util.isNull($scope.model.line) ||
-            window.Util.isNull($scope.model.card) ||
-            window.Util.isNull($scope.model.count_plan) || $scope.model.count_plan == 0 ||
-            window.Util.isNull($scope.model.time_start) ||
-            window.Util.isNull($scope.model.time_end) ||
-            window.Util.isNull($scope.model.extra_hour) ||
-            window.Util.isNull($scope.model.speed) || $scope.model.speed == 0) {
-            layer.msg('请完善生产计划信息');
+        if (window.Util.isNull($scope.model.title)) {
+            layer.msg('请完善图集信息');
             return;
         }
-        $http.post('/api/updatePatchPlan', $scope.model).success(function (data) {
+        $http.post('/api/updateThumb', $scope.model).success(function (data) {
             layer.msg(data.message);
             if (data.success) {
                 $scope.get();
@@ -318,6 +314,16 @@ app.controller('thumbCtrl', function ($scope, $http) {
             });
         });
     };
+    $scope.deleteImg = function (e) {
+        layer.confirm('此操作将删除图集', null, function () {
+            $http.post(`/api/deleteImg/${e.id}`).success(function (data) {
+                layer.msg(data.message);
+                if (data.success) {
+                    $scope.showImageModal($scope.model);
+                }
+            });
+        });
+    }
     $scope.makePage = function (data) {
         layui.laypage.render({
             elem: 'page',

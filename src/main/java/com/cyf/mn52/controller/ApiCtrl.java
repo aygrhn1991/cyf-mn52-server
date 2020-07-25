@@ -138,6 +138,20 @@ public class ApiCtrl {
         int count = this.jdbc.update(sql,id);
         return R.success("操作成功");
     }
+    @RequestMapping("/deleteImg/{id}")
+    @ResponseBody
+    public Result deleteImg(@PathVariable int id) {
+        String sql = "delete from mn_gallery where id=?";
+        int count = this.jdbc.update(sql,id);
+        return R.success("操作成功");
+    }
+    @RequestMapping("/updateThumb")
+    @ResponseBody
+    public Result updateThumb(@RequestBody Thumb model) {
+        String sql = "update mn_thumbs t set t.title=? where t.unique_id=?";
+        int count = this.jdbc.update(sql, model.title, model.unique_id);
+        return R.success("图集更新成功");
+    }
     //endregion
 
     //region 类别管理
