@@ -1,14 +1,129 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="home/layout">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
 <div th:fragment="content">
-    页面中正文内容：采用th:include + th:replace方式进行页面布局
+    <div ng-controller="indexCtrl">
+        <div class="path">
+            <img src="http://image.mn52.com/img/allimg/200602/bauyun_shanchuan.png">
+            当前位置：<a>首页</a>&nbsp;>&nbsp;<a>嘻嘻哈哈</a>&nbsp;>&nbsp;嘻嘻哈哈
+        </div>
+        <div class="content" ng-repeat="d in category">
+            <div class="content-title">
+                <a ng-bind="d.name"></a>
+            </div>
+            <div class="box">
+                <div class="block" ng-repeat="g in d.gallery">
+                    <div class="block-img">
+                        <div class="block-modal">
+                            <div class="block-count">12张</div>
+                        </div>
+                        <img src="http://image.mn52.com/img/allimg/200602/bauyun_shanchuan.png">
+                    </div>
+                    <div class="block-description">
+                        <div class="block-title" ng-bind="g.title"></div>
+                        <div class="block-tip">
+                            <img src="http://image.mn52.com/img/allimg/200602/bauyun_shanchuan.png">123123
+                            <img src="http://image.mn52.com/img/allimg/200602/bauyun_shanchuan.png">13123
+                        </div>
+                        <div>
+                            <a class="tag">啊啊发送到</a>
+                            <a class="tag">胜多负少</a>
+                            <a class="tag">试试</a>
+                            <a class="tag">大幅度</a>
+                            <a class="tag">是</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="content-title">
+                <a>嘻嘻哈哈</a>
+            </div>
+            <div>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">是</a>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">是</a>
+                <a class="tag">大幅度asd</a>
+                <a class="tag">是</a>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">是</a>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">大幅度asd</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">是</a>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">是</a>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">是</a>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">是</a>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">是</a>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">是</a>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">是</a>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">是</a>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">是</a>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">是</a>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">是</a>
+                <a class="tag">啊啊发送到</a>
+                <a class="tag">胜多负少</a>
+                <a class="tag">试试</a>
+                <a class="tag">大幅度</a>
+                <a class="tag">是</a>
+            </div>
+        </div>
+    </div>
 </div>
-
-</body>
 </html>
