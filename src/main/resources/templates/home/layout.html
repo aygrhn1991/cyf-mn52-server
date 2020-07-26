@@ -10,13 +10,13 @@
 </head>
 <body ng-app="app" ng-controller="layoutCtrl">
 <div class="container">
-    <header>
-        <a class="logo">
+    <header id="top">
+        <a href="/home/index" class="logo">
             <img src="/img/logo.png">
         </a>
         <ul class="nav">
-            <li><a>首页</a></li>
-            <li ng-repeat="d in nav"><a ng-bind="d.name"></a></li>
+            <li><a href="/home/index">首页</a></li>
+            <li ng-repeat="d in nav"><a ng-href="{{'/home/category?id='+d.id}}" ng-bind="d.name"></a></li>
         </ul>
         <div class="search">
             <select ng-options="x.id as x.name for x in layoutCategory" ng-model="search.number1"></select>
@@ -41,14 +41,14 @@
         </div>
         <div class="link">
             <div>
-                <a>首页</a>
-                <a ng-repeat="d in nav" ng-bind="d.name"></a>
+                <a href="/home/index">首页</a>
+                <a  ng-href="{{'/home/category?id='+d.id}}" ng-repeat="d in nav" ng-bind="d.name"></a>
             </div>
             <div>
                 <a>手机版</a>
             </div>
             <div>
-                <a>返回顶部</a>
+                <a href="#top">返回顶部</a>
             </div>
         </div>
     </footer>
