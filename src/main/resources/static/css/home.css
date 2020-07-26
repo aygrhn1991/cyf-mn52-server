@@ -13,7 +13,8 @@ a {
     cursor: pointer;
 }
 
-header {
+header,
+footer {
     padding: 20px 0;
 }
 
@@ -140,27 +141,32 @@ footer a {
     padding: 40px;
     margin-bottom: 30px;
     border-bottom: 5px solid #f2f2f2;
-
 }
 
 .content-title > a {
     font-size: 20px;
     display: inline-block;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #ebeef1;
-    padding-right: 30px;
+    padding: 0 20px 30px 0;
     margin-bottom: 30px;
+    border-bottom: 1px solid #ebeef1;
 }
 
-.box {
-    column-count: 4;
-    column-gap: 40px;
+.box > .block:nth-child(4n-3) {
+    margin-left: 0;
+}
+
+.box > .block:nth-child(4n) {
+    margin-right: 0;
 }
 
 .block {
     position: relative;
+    display: inline-block;
+    width: 240px;
     height: 480px;
+    margin: 0 24px;
     text-align: center;
+    vertical-align: top;
 }
 
 .block-img {
@@ -183,8 +189,7 @@ footer a {
 }
 
 .block:hover .block-modal {
-    display: block;
-    /*opacity: 1;*/
+    opacity: 1;
 }
 
 .block-modal {
@@ -194,9 +199,8 @@ footer a {
     width: 100%;
     height: 480px;
     background: linear-gradient(to right top, rgba(0, 0, 0, .9), rgba(255, 255, 255, 0.5));
-    /*transition: opacity .2s;*/
-    /*opacity: 0;*/
-    display: none;
+    transition: opacity .3s;
+    opacity: 0;
     z-index: 1;
 }
 
@@ -206,7 +210,7 @@ footer a {
 
 .block-title {
     font-size: 16px;
-    min-height: 30px;
+    height: 41px;
 }
 
 .block-tip {

@@ -19,7 +19,7 @@
             <li ng-repeat="d in nav"><a ng-bind="d.name"></a></li>
         </ul>
         <div class="search">
-            <select ng-options="x.id as x.name for x in category" ng-model="search.number1"></select>
+            <select ng-options="x.id as x.name for x in layoutCategory" ng-model="search.number1"></select>
             <input type="text" placeholder="请输入搜索关键词">
             <button>搜索</button>
             <ul class="top-tag">

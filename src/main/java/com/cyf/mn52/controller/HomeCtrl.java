@@ -67,23 +67,38 @@ public class HomeCtrl {
         return R.success("布局页数据", map);
     }
 
+    //栏目列表及每个栏目下4个最新图集
     @RequestMapping("/getIndexData")
     @ResponseBody
     public Result getIndexData() {
         Map map = new HashMap();
-        String sql = "select t.* from mn_category t where t.state=1 order by t.sort desc";
-        List<Map<String, Object>> list = this.jdbc.queryForList(sql);
-        for (Map m : list) {
-            sql = "select *,group_concat(t1.tag_name) tags from mn_gallery t " +
-                    " right join (select tt.*,tt1.name tag_name from mn_gallery_tag tt left join mn_tag tt1 on tt.tag_id=tt1.id) t1 on t.id=t1.gallery_id " +
-                    " where t.state=1 and t.category_id=? group by t.id order by t.time_publish desc limit 0,4 ";
+        String sql = "select t.* from mn_category t where t.state=1 order by t.sort desc,t.id";
+        List<Map<String, Object>> categoryList = this.jdbc.queryForList(sql);
+        for (Map m : categoryList) {
+            sql = "select * from mn_gallery t where t.state=1 and t.category_id=? order by t.time_publish desc,t.id limit 0,4";
             List<Map<String, Object>> galleryList = this.jdbc.queryForList(sql, m.get("id").toString());
+            String galleryIds = "";
+            for (Map gallery : galleryList) {
+                galleryIds += gallery.get("id").toString() + ",";
+            }
+            galleryIds = galleryIds.substring(0, galleryIds.length() - 1);
+            sql = "select t.*,t1.* from mn_gallery_tag t left join mn_tag t1 on t.tag_id=t1.id where t.gallery_id in (" + galleryIds + ")";
+            List<Map<String, Object>> allTag = this.jdbc.queryForList(sql);
+            for (Map gallery : galleryList) {
+                List<Map<String, Object>> galleryTagList = new ArrayList<>();
+                for (Map tag : allTag) {
+                    if (tag.get("gallery_id").toString().equals(gallery.get("id").toString())) {
+                        galleryTagList.add(tag);
+                    }
+                }
+                gallery.put("tag", galleryTagList);
+            }
             m.put("gallery", galleryList);
         }
-        map.put("category", list);
-        sql = "select t.* from mn_tag t where t.state=1 and t.top=1";
-        list = this.jdbc.queryForList(sql);
-        map.put("tag", list);
+        map.put("category", categoryList);
+        sql = "select t.* from mn_tag t where t.state=1 order by t.time_update desc limit 0,100";
+        List<Map<String, Object>> tagList = this.jdbc.queryForList(sql);
+        map.put("tag", tagList);
         return R.success("首页数据", map);
     }
     //endregion

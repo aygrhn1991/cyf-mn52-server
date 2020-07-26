@@ -16,7 +16,7 @@
                         <div class="block-modal">
                             <div class="block-count">12张</div>
                         </div>
-                        <img src="http://image.mn52.com/img/allimg/200602/bauyun_shanchuan.png">
+                        <img ng-src="{{url+g.cover}}">
                     </div>
                     <div class="block-description">
                         <div class="block-title" ng-bind="g.title"></div>
@@ -25,11 +25,7 @@
                             <img src="http://image.mn52.com/img/allimg/200602/bauyun_shanchuan.png">13123
                         </div>
                         <div>
-                            <a class="tag">啊啊发送到</a>
-                            <a class="tag">胜多负少</a>
-                            <a class="tag">试试</a>
-                            <a class="tag">大幅度</a>
-                            <a class="tag">是</a>
+                            <a class="tag" ng-repeat="t in g.tag" ng-bind="t.name"></a>
                         </div>
                     </div>
                 </div>
@@ -37,91 +33,10 @@
         </div>
         <div class="content">
             <div class="content-title">
-                <a>嘻嘻哈哈</a>
+                <a>最新标签</a>
             </div>
             <div>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">是</a>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">是</a>
-                <a class="tag">大幅度asd</a>
-                <a class="tag">是</a>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">是</a>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">大幅度asd</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">是</a>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">是</a>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">是</a>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">是</a>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">是</a>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">是</a>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">是</a>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">是</a>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">是</a>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">是</a>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">是</a>
-                <a class="tag">啊啊发送到</a>
-                <a class="tag">胜多负少</a>
-                <a class="tag">试试</a>
-                <a class="tag">大幅度</a>
-                <a class="tag">是</a>
+                <a class="tag" ng-repeat="d in tag" ng-bind="d.name"></a>
             </div>
         </div>
     </div>

@@ -3,12 +3,12 @@ app.controller('layoutCtrl', function ($scope, $http) {
     $scope.getLayoutData = function () {
         $http.post('/home/getLayoutData').success(function (data) {
             $scope.nav = [];
-            $scope.category = [];
+            $scope.layoutCategory = [];
             data.data.category.forEach(function (x) {
                 $scope.nav.push(x);
-                $scope.category.push(x);
+                $scope.layoutCategory.push(x);
             });
-            $scope.category.unshift({id: -1, name: '全站搜索'});
+            $scope.layoutCategory.unshift({id: -1, name: '全站搜索'});
             $scope.tag = data.data.tag;
         });
     };
@@ -23,11 +23,12 @@ app.controller('layoutCtrl', function ($scope, $http) {
 app.controller('indexCtrl', function ($scope, $http) {
     $scope.getIndexData = function () {
         $http.post('/home/getIndexData').success(function (data) {
-            console.log(data.data);
             $scope.category = data.data.category;
+            $scope.tag = data.data.tag;
         });
     };
     $scope.reset = function () {
+        $scope.url='http://image.mn52.com/img';
         $scope.getIndexData();
     };
     $scope.reset();
