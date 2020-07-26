@@ -2,6 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="home/layout">
 <div th:fragment="content">
     <div ng-controller="indexCtrl">
+        <div class="layui-carousel" id="carousel">
+            <div carousel-item="">
+                <div ng-repeat="d in carousel"><img ng-src="{{url+d.cover}}"></div>
+            </div>
+        </div>
         <div class="path">
             <img src="http://image.mn52.com/img/allimg/200602/bauyun_shanchuan.png">
             当前位置：<a>首页</a>&nbsp;>&nbsp;<a>嘻嘻哈哈</a>&nbsp;>&nbsp;嘻嘻哈哈

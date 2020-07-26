@@ -5,7 +5,7 @@
     <title>mn52-最懂你的图片站</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-    <!--    <link rel="stylesheet" href="/plugin/layui/css/layui.css"/>-->
+    <link rel="stylesheet" href="/plugin/layui/css/layui.css"/>
     <link rel="stylesheet" href="/css/home.css"/>
 </head>
 <body ng-app="app" ng-controller="layoutCtrl">
@@ -24,7 +24,7 @@
             <button>搜索</button>
             <ul class="top-tag">
                 <li>推荐标签：</li>
-                <li ng-repeat="d in tag"><a class="tag" ng-bind="d.name"></a></li>
+                <li ng-repeat="d in layoutTag"><a class="tag" ng-bind="d.name"></a></li>
             </ul>
         </div>
     </header>

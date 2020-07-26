@@ -9,7 +9,7 @@ app.controller('layoutCtrl', function ($scope, $http) {
                 $scope.layoutCategory.push(x);
             });
             $scope.layoutCategory.unshift({id: -1, name: '全站搜索'});
-            $scope.tag = data.data.tag;
+            $scope.layoutTag = data.data.tag;
         });
     };
     $scope.reset = function () {
@@ -25,10 +25,18 @@ app.controller('indexCtrl', function ($scope, $http) {
         $http.post('/home/getIndexData').success(function (data) {
             $scope.category = data.data.category;
             $scope.tag = data.data.tag;
+            $scope.carousel = data.data.carousel;
+            setTimeout(function () {
+                layui.carousel.render({
+                    elem: '#carousel',
+                    width: '100%',
+                    height: '500px',
+                });
+            },1000);
         });
     };
     $scope.reset = function () {
-        $scope.url='http://image.mn52.com/img';
+        $scope.url = 'http://image.mn52.com/img';
         $scope.getIndexData();
     };
     $scope.reset();

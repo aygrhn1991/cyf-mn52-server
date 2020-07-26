@@ -33,6 +33,7 @@ footer {
 
 .nav {
     padding: 0;
+    margin: 30px 0;
     list-style: none;
 }
 
@@ -52,10 +53,8 @@ footer {
 }
 
 .search > input {
-    position: relative;
-    top: -1px;
     border: 1px solid #F0F3F6;
-    height: 36px;
+    height: 38px;
     text-indent: 1em;
 }
 
@@ -102,6 +101,14 @@ footer a {
     font-size: 12px;
     text-decoration: none;
     line-height: 30px;
+}
+
+#carousel {
+    text-align: center;
+}
+
+#carousel img {
+    height: 500px;
 }
 
 .copyright {

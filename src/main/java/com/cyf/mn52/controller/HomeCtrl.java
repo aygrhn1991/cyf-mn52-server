@@ -67,7 +67,7 @@ public class HomeCtrl {
         return R.success("布局页数据", map);
     }
 
-    //栏目列表及每个栏目下4个最新图集
+    //轮播/栏目列表及每个栏目下4个最新图集/热门标签
     @RequestMapping("/getIndexData")
     @ResponseBody
     public Result getIndexData() {
@@ -82,7 +82,7 @@ public class HomeCtrl {
                 galleryIds += gallery.get("id").toString() + ",";
             }
             galleryIds = galleryIds.substring(0, galleryIds.length() - 1);
-            sql = "select t.*,t1.* from mn_gallery_tag t left join mn_tag t1 on t.tag_id=t1.id where t.gallery_id in (" + galleryIds + ")";
+            sql = "select t.*,t1.* from mn_gallery_tag t left join mn_tag t1 on t.tag_id=t1.id where t1.state=1 and t.gallery_id in (" + galleryIds + ")";
             List<Map<String, Object>> allTag = this.jdbc.queryForList(sql);
             for (Map gallery : galleryList) {
                 List<Map<String, Object>> galleryTagList = new ArrayList<>();
@@ -99,6 +99,9 @@ public class HomeCtrl {
         sql = "select t.* from mn_tag t where t.state=1 order by t.time_update desc limit 0,100";
         List<Map<String, Object>> tagList = this.jdbc.queryForList(sql);
         map.put("tag", tagList);
+        sql = "select t.* from mn_gallery t where t.state=1 and t.carousel=1 order by t.time_publish desc";
+        List<Map<String, Object>> carouselList = this.jdbc.queryForList(sql);
+        map.put("carousel", carouselList);
         return R.success("首页数据", map);
     }
     //endregion
