@@ -23,16 +23,16 @@ app.controller('layoutCtrl', function ($scope, $http) {
 app.controller('indexCtrl', function ($scope, $http) {
     $scope.getIndexData = function () {
         $http.post('/home/getIndexData').success(function (data) {
+            $scope.carousel = data.data.carousel;
             $scope.category = data.data.category;
             $scope.tag = data.data.tag;
-            $scope.carousel = data.data.carousel;
             setTimeout(function () {
                 layui.carousel.render({
                     elem: '#carousel',
                     width: '100%',
                     height: '500px',
                 });
-            },1000);
+            }, 1);
         });
     };
     $scope.reset = function () {

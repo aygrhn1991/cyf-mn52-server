@@ -4,7 +4,7 @@
     <div ng-controller="indexCtrl">
         <div class="layui-carousel" id="carousel">
             <div carousel-item="">
-                <div ng-repeat="d in carousel"><img ng-src="{{url+d.cover}}"></div>
+                <a ng-href="{{'/home/gallery?id='+d.id}}" ng-repeat="d in carousel"><img ng-src="{{url+d.cover}}"></a>
             </div>
         </div>
         <div class="path">
