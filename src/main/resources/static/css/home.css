@@ -47,18 +47,22 @@ footer {
     padding: 30px 40px;
 }
 
-.search > select {
+.search form {
+    display: inline-block;
+}
+
+.search select {
     border: 1px solid #F0F3F6;
     height: 40px;
 }
 
-.search > input {
+.search input {
     border: 1px solid #F0F3F6;
     height: 38px;
     text-indent: 1em;
 }
 
-.search > button {
+.search button {
     height: 38px;
     border: none;
     color: #fff;
@@ -66,7 +70,7 @@ footer {
     padding: 0 10px;
 }
 
-.search > button:hover {
+.search button:hover {
     cursor: pointer;
     background: #FFC107;
 }
@@ -177,6 +181,7 @@ footer a {
 }
 
 .block-img {
+    display: block;
     position: relative;
     width: 100%;
     height: 300px;
@@ -204,11 +209,28 @@ footer a {
     top: 0;
     left: 0;
     width: 100%;
-    height: 480px;
-    background: linear-gradient(to right top, rgba(0, 0, 0, .9), rgba(255, 255, 255, 0.5));
+    height: 300px;
+    background: linear-gradient(to right top, rgba(0, 0, 0, .7), rgba(255, 255, 255, 0.5));
     transition: opacity .3s;
     opacity: 0;
     z-index: 1;
+}
+
+.block-count {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background: #F72D66;
+    border-radius: 50px;
+    color: #fff;
+}
+
+.block-count:hover {
+    background: #FFC107;
 }
 
 .block-description {
