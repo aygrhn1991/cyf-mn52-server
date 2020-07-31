@@ -12,12 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
 
 @Controller
-@RequestMapping("/home")
+@RequestMapping(value = {"/home"})
 public class HomeCtrl {
 
     Logger logger = LoggerFactory.getLogger(getClass());
@@ -34,7 +33,7 @@ public class HomeCtrl {
     }
 
     //region 页面
-    @RequestMapping("/index")
+    @RequestMapping(value = {"/index"})
     public String index(Model model) {
         String sql = "select t.id,t.name " +
                 "from mn_category t " +

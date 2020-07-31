@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="path">
-            <img src="http://image.mn52.com/img/allimg/200602/bauyun_shanchuan.png">
+            <img src="/img/location.png">
             当前位置：<a>首页</a>&nbsp;>&nbsp;<a>嘻嘻哈哈</a>&nbsp;>&nbsp;嘻嘻哈哈
         </div>
         <div class="content" th:each="category:${category}">
@@ -26,8 +26,8 @@
                     <div class="block-description">
                         <div class="block-title" th:text="${gallery.title}"></div>
                         <div class="block-tip">
-                            <img src="http://image.mn52.com/img/allimg/200602/bauyun_shanchuan.png"><span th:text="${gallery.scan}"></span>
-                            <img src="http://image.mn52.com/img/allimg/200602/bauyun_shanchuan.png"><span th:text="${gallery.good}"></span>
+                            <img class="block-tip-scan" src="/img/scan.png"><span th:text="${gallery.scan}"></span>&nbsp;&nbsp;
+                            <img class="block-tip-good" src="/img/good.png"><span th:text="${gallery.good}"></span>
                         </div>
                         <div>
                             <a class="tag" th:href="@{'/home/tag/'+${tag.tag_id}}" th:each="tag:${gallery.tag}" th:text="${tag.tag_name}"></a>
