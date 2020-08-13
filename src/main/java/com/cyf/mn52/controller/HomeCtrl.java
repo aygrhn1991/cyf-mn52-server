@@ -35,17 +35,21 @@ public class HomeCtrl {
     //region 页面
     @RequestMapping(value = {"/index"})
     public String index(Model model) {
-        String sql = "select t.id,t.name " +
+        //轮播
+        String sql = "select t.id,t.title,t.cover from mn_gallery t where t.state=1 and t.carousel=1 order by t.time_publish desc";
+        List<Map<String, Object>> carouselList = this.jdbc.queryForList(sql);
+        model.addAttribute("carousel", carouselList);
+        //分类/每个分类下4个图集
+        sql = "select t.id,t.name " +
                 "from mn_category t " +
                 "where t.state=1 " +
                 "order by t.sort desc,t.id";
         List<Map<String, Object>> categoryList = this.jdbc.queryForList(sql);
         for (Map category : categoryList) {
-            sql = "select t2.id tag_id,t2.name tag_name,t3.*" +
-                    "from mn_gallery_tag t1,mn_tag t2,(select t.id,t.title,t.cover,t.scan,t.good,t.time_publish,(select count(*) from mn_image tt where tt.gallery_unique_id=t.unique_id) img from mn_gallery t where t.category_id=? order by t.time_publish desc limit 0,4) t3 " +
-                    "where t1.tag_id=t2.id " +
-                    "and t1.gallery_id=t3.id " +
-                    "order by t3.time_publish desc";
+            sql = "select t1.id,t1.title,t1.cover,t1.scan,t1.good,(select count(*) from mn_image tt2 where tt2.gallery_unique_id=t1.unique_id) img,t3.id tag_id,t3.name tag_name " +
+                    "from (select * from mn_gallery tt1 where tt1.category_id=? order by tt1.time_publish desc limit 0,4) t1 " +
+                    "left join mn_gallery_tag t2 on t1.id=t2.gallery_id " +
+                    "left join mn_tag t3 on t2.tag_id=t3.id";
             List<Map<String, Object>> repeatGalleryList = this.jdbc.queryForList(sql, category.get("id").toString());
             List<Map<String, Object>> galleryList = new ArrayList<>();
             Set<String> gallerySet = new HashSet();
@@ -73,12 +77,11 @@ public class HomeCtrl {
             category.put("gallery", galleryList);
         }
         model.addAttribute("category", categoryList);
+        //最新标签
         sql = "select t.id,t.name from mn_tag t where t.state=1 order by t.time_update desc limit 0,100";
         List<Map<String, Object>> tagList = this.jdbc.queryForList(sql);
         model.addAttribute("tag", tagList);
-        sql = "select t.id,t.title,t.cover from mn_gallery t where t.state=1 and t.carousel=1 order by t.time_publish desc";
-        List<Map<String, Object>> carouselList = this.jdbc.queryForList(sql);
-        model.addAttribute("carousel", carouselList);
+        //布局内容
         Map layout = this.getLayoutData();
         model.addAttribute("topCategory", layout.get("topCategory"));
         model.addAttribute("topTag", layout.get("topTag"));
@@ -120,7 +123,8 @@ public class HomeCtrl {
         sql = "select t.id,t.name " +
                 "from mn_tag t " +
                 "where t.state=1 " +
-                "and t.top=1";
+                "and t.top=1 " +
+                "order by t.time_update desc";
         list = this.jdbc.queryForList(sql);
         map.put("topTag", list);
         return map;
