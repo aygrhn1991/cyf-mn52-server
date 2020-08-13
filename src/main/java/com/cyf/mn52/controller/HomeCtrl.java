@@ -46,10 +46,10 @@ public class HomeCtrl {
                 "order by t.sort desc,t.id";
         List<Map<String, Object>> categoryList = this.jdbc.queryForList(sql);
         for (Map category : categoryList) {
-            sql = "select t1.id,t1.title,t1.cover,t1.scan,t1.good,(select count(*) from mn_image tt2 where tt2.gallery_unique_id=t1.unique_id) img,t3.id tag_id,t3.name tag_name " +
-                    "from (select * from mn_gallery tt1 where tt1.category_id=? order by tt1.time_publish desc limit 0,4) t1 " +
-                    "left join mn_gallery_tag t2 on t1.id=t2.gallery_id " +
-                    "left join mn_tag t3 on t2.tag_id=t3.id";
+            sql = "select t.id,t.title,t.cover,t.scan,t.good,(select count(*) from mn_image tt2 where tt2.gallery_unique_id=t.unique_id) img,t2.id tag_id,t2.name tag_name " +
+                    "from (select * from mn_gallery tt1 where tt1.category_id=? order by tt1.time_publish desc limit 0,4) t " +
+                    "left join mn_gallery_tag t1 on t.id=t1.gallery_id " +
+                    "left join mn_tag t2 on t1.tag_id=t2.id";
             List<Map<String, Object>> repeatGalleryList = this.jdbc.queryForList(sql, category.get("id").toString());
             List<Map<String, Object>> galleryList = new ArrayList<>();
             Set<String> gallerySet = new HashSet();
@@ -96,7 +96,16 @@ public class HomeCtrl {
     }
 
     @RequestMapping("/gallery/{id}")
-    public String gallery(@PathVariable int id) {
+    public String gallery(@PathVariable int id, Model model) {
+        String sql = "select * from mn_image t left join mn_gallery t1 on t1.id=? where t.gallery_unique_id=t1.unique_id";
+        List<Map<String, Object>> data = this.jdbc.queryForList(sql, id);
+        model.addAttribute("image", data);
+        //布局内容
+        Map layout = this.getLayoutData();
+        model.addAttribute("topCategory", layout.get("topCategory"));
+        model.addAttribute("topTag", layout.get("topTag"));
+        model.addAttribute("ossUrl", this.ossUrl);
+        model.addAttribute("date", new Date());
         return "home/gallery";
     }
 
