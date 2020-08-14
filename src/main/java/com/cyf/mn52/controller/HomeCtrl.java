@@ -46,7 +46,7 @@ public class HomeCtrl {
                 "order by t.sort desc,t.id";
         List<Map<String, Object>> categoryList = this.jdbc.queryForList(sql);
         for (Map category : categoryList) {
-            sql = "select t.id,t.title,t.cover,t.scan,t.good,(select count(*) from mn_image tt2 where tt2.gallery_unique_id=t.unique_id) img,t2.id tag_id,t2.name tag_name " +
+            sql = "select t.id,t.title,t.cover,t.scan,t.good,(select count(*) from mn_image tt2 where tt2.gallery_id=t.id) img,t2.id tag_id,t2.name tag_name " +
                     "from (select * from mn_gallery tt1 where tt1.category_id=? order by tt1.time_publish desc limit 0,4) t " +
                     "left join mn_gallery_tag t1 on t.id=t1.gallery_id " +
                     "left join mn_tag t2 on t1.tag_id=t2.id";
@@ -97,7 +97,7 @@ public class HomeCtrl {
 
     @RequestMapping("/gallery/{id}")
     public String gallery(@PathVariable int id, Model model) {
-        String sql = "select * from mn_image t left join mn_gallery t1 on t1.id=? where t.gallery_unique_id=t1.unique_id";
+        String sql = "select * from mn_image t where t.gallery_id=?";
         List<Map<String, Object>> data = this.jdbc.queryForList(sql, id);
         model.addAttribute("image", data);
         //布局内容

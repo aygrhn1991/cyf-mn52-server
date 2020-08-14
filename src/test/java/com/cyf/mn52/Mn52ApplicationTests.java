@@ -6,13 +6,20 @@ import com.aliyun.oss.common.comm.ResponseMessage;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 class Mn52ApplicationTests {
+
+    @Autowired
+    private JdbcTemplate jdbc;
 
     @Test
     void contextLoads() {
@@ -29,7 +36,23 @@ class Mn52ApplicationTests {
 //        } catch (Exception e) {
 //            System.out.println(e);
 //        }
-        System.out.println("hello");
+        System.out.println("开始");
+        String sql = "select DISTINCT t.gallery_unique_id from mn_image t where t.gallery_id is null";
+        List<Map<String, Object>> images = this.jdbc.queryForList(sql);
+        for (Map image : images) {
+            try {
+                sql = "select t.id from mn_gallery t where t.unique_id=?";
+                int gallery_id = this.jdbc.queryForObject(sql, Integer.class, image.get("gallery_unique_id").toString());
+                sql = "update mn_image t set t.gallery_id=? where t.gallery_unique_id=?";
+                int count = this.jdbc.update(sql, gallery_id, image.get("gallery_unique_id").toString());
+                System.out.println("更新图集--->" + gallery_id);
+                System.out.println("更新数量--->" + count);
+            } catch (Exception e) {
+                System.out.println("问题图集--->" + image.get("gallery_unique_id").toString());
+            }
+
+        }
+        System.out.println("全部完成");
     }
 
 }

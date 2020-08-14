@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="home/layout">
 <div th:fragment="content">
-   <img th:src="${ossUrl+image.path}" th:each="image:${image}">
+    <ul id="gallery" class="galleryView">
+        <li th:each="image:${image}"><img th:src="${ossUrl+image.path}"/></li>
+        <li><img src="sdf"/></li>
+    </ul>
+    <script>
+        $(function () {
+            $('#gallery').galleryView();
+        });
+    </script>
 </div>
 </html>
