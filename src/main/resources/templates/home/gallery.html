@@ -3,11 +3,13 @@
 <div th:fragment="content">
     <ul id="gallery" class="galleryView">
         <li th:each="image:${image}"><img th:src="${ossUrl+image.path}"/></li>
-        <li><img src="sdf"/></li>
     </ul>
     <script>
         $(function () {
-            $('#gallery').galleryView();
+            $('#gallery').galleryView({
+                panel_scale: 'fit',
+                frame_scale: 'fit',
+            });
         });
     </script>
 </div>

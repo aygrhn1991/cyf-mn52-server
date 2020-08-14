@@ -82,11 +82,7 @@ public class HomeCtrl {
         List<Map<String, Object>> tagList = this.jdbc.queryForList(sql);
         model.addAttribute("tag", tagList);
         //布局内容
-        Map layout = this.getLayoutData();
-        model.addAttribute("topCategory", layout.get("topCategory"));
-        model.addAttribute("topTag", layout.get("topTag"));
-        model.addAttribute("ossUrl", this.ossUrl);
-        model.addAttribute("date", new Date());
+        this.concatLayoutData(model);
         return "home/index";
     }
 
@@ -101,11 +97,7 @@ public class HomeCtrl {
         List<Map<String, Object>> data = this.jdbc.queryForList(sql, id);
         model.addAttribute("image", data);
         //布局内容
-        Map layout = this.getLayoutData();
-        model.addAttribute("topCategory", layout.get("topCategory"));
-        model.addAttribute("topTag", layout.get("topTag"));
-        model.addAttribute("ossUrl", this.ossUrl);
-        model.addAttribute("date", new Date());
+        this.concatLayoutData(model);
         return "home/gallery";
     }
 
@@ -121,21 +113,21 @@ public class HomeCtrl {
     //endregion
 
 
-    private Map getLayoutData() {
-        Map map = new HashMap();
+    private void concatLayoutData(Model model) {
         String sql = "select t.id,t.name " +
                 "from mn_category t " +
                 "where t.state=1 " +
                 "order by t.sort desc";
         List<Map<String, Object>> list = this.jdbc.queryForList(sql);
-        map.put("topCategory", list);
+        model.addAttribute("topCategory", list);
         sql = "select t.id,t.name " +
                 "from mn_tag t " +
                 "where t.state=1 " +
                 "and t.top=1 " +
                 "order by t.time_update desc";
         list = this.jdbc.queryForList(sql);
-        map.put("topTag", list);
-        return map;
+        model.addAttribute("topTag", list);
+        model.addAttribute("ossUrl", this.ossUrl);
+        model.addAttribute("date", new Date());
     }
 }
