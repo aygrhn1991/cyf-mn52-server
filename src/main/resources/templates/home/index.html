@@ -7,7 +7,6 @@
                 <a th:href="@{'/home/gallery/'+${carousel.id}}" th:each="carousel:${carousel}"><img th:src="${ossUrl+carousel.cover}"></a>
             </div>
         </div>
-
         <div class="content" th:each="category:${category}">
             <div class="content-title">
                 <a th:href="@{'/home/category/'+${category.id}}" th:text="${category.name}"></a>
@@ -24,7 +23,7 @@
                         <div class="block-title" th:text="${gallery.title}"></div>
                         <div class="block-tip">
                             <img class="block-tip-scan" src="/img/scan.png"><span th:text="${gallery.scan}"></span>&nbsp;&nbsp;
-                            <img class="block-tip-good" src="/img/good.png"><span th:text="${gallery.good}"></span>
+                            <img class="block-tip-good" src="/img/good.png" th:attr="galleryid=${gallery.id}"><span th:text="${gallery.good}"></span>
                         </div>
                         <div>
                             <a class="tag" th:href="@{'/home/tag/'+${tag.tag_id}}" th:each="tag:${gallery.tag}" th:text="${tag.tag_name}"></a>
@@ -33,16 +32,6 @@
                 </div>
             </div>
         </div>
-
     </div>
-    <script>
-        $(function () {
-            layui.carousel.render({
-                elem: '#carousel',
-                width: '100%',
-                height: '350px',
-            });
-        });
-    </script>
 </div>
 </html>

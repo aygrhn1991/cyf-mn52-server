@@ -153,6 +153,13 @@ public class HomeCtrl {
         model.addAttribute("image", image);
         //布局内容
         this.concatLayoutData(model);
+        //浏览量+1
+        try {
+            sql = "update mn_gallery t set t.scan=t.scan+1 where t.id=?";
+            int count = this.jdbc.update(sql, id);
+        } catch (Exception e) {
+
+        }
         return "home/gallery";
     }
 
@@ -200,4 +207,13 @@ public class HomeCtrl {
         model.addAttribute("ossUrl", this.ossUrl);
         model.addAttribute("date", new Date());
     }
+
+    @RequestMapping("/good/{id}")
+    @ResponseBody
+    public Result good(@PathVariable String id) {
+        String sql = "update mn_gallery t set t.good=t.good+1 where t.id=?";
+        int count = this.jdbc.update(sql, id);
+        return R.success("已点赞");
+    }
+
 }

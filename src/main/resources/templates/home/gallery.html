@@ -8,13 +8,5 @@
     <ul id="gallery" class="galleryView">
         <li th:each="image:${image}"><img th:src="${ossUrl+image.path}"/></li>
     </ul>
-    <script>
-        $(function () {
-            $('#gallery').galleryView({
-                panel_scale: 'fit',
-                frame_scale: 'fit',
-            });
-        });
-    </script>
 </div>
 </html>

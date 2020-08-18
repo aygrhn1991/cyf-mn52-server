@@ -71,5 +71,32 @@
         </div>
     </footer>
 </div>
+<script>
+    $(function () {
+        layui.carousel.render({
+            elem: '#carousel',
+            width: '100%',
+            height: '350px',
+        });
+        $('#gallery').galleryView({
+            panel_scale: 'fit',
+            frame_scale: 'fit',
+        });
+        $('.block-tip-good').click(function () {
+            var that = this;
+            var galleryid = $(that).attr('galleryid');
+            $.ajax({
+                type: 'get',
+                url: `/home/good/${galleryid}`,
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function (data) {
+                    $(that).attr('src', '/img/good-red.png');
+                    $(that).next('span').text(parseInt($(that).next('span').text()) + 1);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
