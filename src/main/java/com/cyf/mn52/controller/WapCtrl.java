@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.*;
 
 @Controller
-@RequestMapping(value = {"/home"})
-public class HomeCtrl {
+@RequestMapping(value = {"/wap"})
+public class WapCtrl {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -87,7 +87,7 @@ public class HomeCtrl {
         model.addAttribute("category", categoryList);
         //布局内容
         this.concatLayoutData(model);
-        return "home/index";
+        return "wap/index";
     }
 
     @RequestMapping(value = {"/category/{id}/{page}", "/category/{id}"})
@@ -140,7 +140,7 @@ public class HomeCtrl {
         model.addAttribute("page", new UtilPageOfJava(page, limit, total, navigatePages));
         //布局内容
         this.concatLayoutData(model);
-        return "home/category";
+        return "wap/category";
     }
 
     @RequestMapping("/gallery/{id}")
@@ -153,22 +153,22 @@ public class HomeCtrl {
         model.addAttribute("image", image);
         //布局内容
         this.concatLayoutData(model);
-        return "home/gallery";
+        return "wap/gallery";
     }
 
     @RequestMapping("/tags")
     public String tags() {
-        return "home/tags";
+        return "wap/tags";
     }
 
     @RequestMapping("/tag/{id}")
     public String tag(@PathVariable int id) {
-        return "home/tag";
+        return "wap/tag";
     }
 
     @RequestMapping("/search")
     public String search(@RequestParam int id, @RequestParam String key) {
-        return "home/search";
+        return "wap/search";
     }
     //endregion
 

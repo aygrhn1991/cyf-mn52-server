@@ -1,10 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>mn52-最懂你的图片站</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/plugin/carousel/css/galleryview.min.css"/>
+    <link rel="stylesheet" href="/plugin/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/css/home.css"/>
+    <script type="text/javascript" src="/plugin/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/plugin/carousel/js/jquery.galleryview.min.js"></script>
+    <script type="text/javascript" src="/plugin/carousel/js/jquery.timers.min.js"></script>
+    <script type="text/javascript" src="/plugin/layui/layui.all.js"></script>
 </head>
 <body>
-
+<div class="container">
+    <header id="top">
+        <a href="/home/index" class="logo">
+            <img src="/img/logo.png">
+        </a>
+        <ul class="nav">
+            <li><a href="/home/index">首页</a></li>
+            <li th:each="topCategory:${topCategory}"><a th:href="@{'/home/category/'+${topCategory.id}}" th:text="${topCategory.name}"></a></li>
+        </ul>
+        <div class="search">
+            <form action="/home/search">
+                <select name="id">
+                    <option value="-1">全站搜索</option>
+                    <option th:value="${topCategory.id}" th:each="topCategory:${topCategory}" th:text="${topCategory.name}"></option>
+                </select>
+                <input type="text" name="key" placeholder="请输入搜索关键词">
+                <button type="submit">搜索</button>
+            </form>
+            <ul class="top-tag">
+                <li>推荐标签：</li>
+                <li th:each="topTag:${topTag}"><a class="tag" th:href="@{'/home/tag/'+${topTag.id}}" th:text="${topTag.name}"></a></li>
+            </ul>
+        </div>
+    </header>
+    <hr color="#EBEEF1">
+    <div th:replace="::content"></div>
+    <div class="content">
+        <div class="content-title">
+            <a href="/home/tags">最新标签</a>
+        </div>
+        <div>
+            <a class="tag" th:href="@{'/home/tag/'+${tag.id}}" th:each="tag:${tag}" th:text="${tag.name}"></a>
+        </div>
+    </div>
+    <hr color="#EBEEF1">
+    <footer>
+        <div class="copyright">
+            <div>本站纯属免费美女图片欣赏网站，所有mm图片均收集于互联网。</div>
+            <div>如有侵犯版权,请来信告知,我们将立即更正。</div>
+            <div>Email：1127587445@qq.com&nbsp;&nbsp;QQ：1127587445</div>
+            <div>Copyright © 2006-<span th:text="${#dates.year(date)}"></span> mn52.com 版权所有</div>
+            <div><a href="http://www.beian.miit.gov.cn/">京ICP备15023835号-3</a></div>
+        </div>
+        <div class="link">
+            <div>
+                <a href="/home/index">首页</a>
+                <a th:each="topCategory:${topCategory}" th:href="@{'/home/category/'+${topCategory.id}}" th:text="${topCategory.name}"></a>
+            </div>
+            <div>
+                <a>手机版</a>
+            </div>
+            <div>
+                <a href="#top">返回顶部</a>
+            </div>
+        </div>
+    </footer>
+</div>
 </body>
 </html>

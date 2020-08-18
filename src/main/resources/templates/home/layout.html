@@ -39,7 +39,15 @@
         </div>
     </header>
     <hr color="#EBEEF1">
-    <div class="container" th:replace="::content">页面正文内容</div>
+    <div th:replace="::content"></div>
+    <div class="content">
+        <div class="content-title">
+            <a href="/home/tags">最新标签</a>
+        </div>
+        <div>
+            <a class="tag" th:href="@{'/home/tag/'+${tag.id}}" th:each="tag:${tag}" th:text="${tag.name}"></a>
+        </div>
+    </div>
     <hr color="#EBEEF1">
     <footer>
         <div class="copyright">
@@ -55,7 +63,7 @@
                 <a th:each="topCategory:${topCategory}" th:href="@{'/home/category/'+${topCategory.id}}" th:text="${topCategory.name}"></a>
             </div>
             <div>
-                <a>手机版</a>
+                <a href="/wap/index">手机版</a>
             </div>
             <div>
                 <a href="#top">返回顶部</a>
