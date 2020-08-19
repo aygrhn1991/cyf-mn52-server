@@ -290,3 +290,8 @@ footer a {
     color: #fff;
     background: #F72D66 !important;
 }
+
+.gv_galleryWrap {
+    background: var(--tag-bg--color) !important;
+    margin: 0 auto;
+}

@@ -13,6 +13,14 @@
     </ul>
     <div class="content">
         <div class="content-title">
+            <a>图集标签</a>
+        </div>
+        <div>
+            <a class="tag" th:href="${'/home/tag/'+tag.id}" th:each="tag:${tag}" th:text="${tag.name}"></a>
+        </div>
+    </div>
+    <div class="content">
+        <div class="content-title">
             <a>相关图集</a>
         </div>
         <div class="box">

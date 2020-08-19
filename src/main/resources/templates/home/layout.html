@@ -79,8 +79,16 @@
             height: '350px',
         });
         $('#gallery').galleryView({
+            show_filmstrip_nav: true,
+            enable_slideshow: true,
+            transition_speed: 500,
+            panel_height: 500,
+            panel_width: 800,
             panel_scale: 'fit',
             frame_scale: 'fit',
+            frame_opacity: 0.8,
+            frame_width: 80,
+            frame_height: 80,
         });
         $('.block-tip-good').click(function () {
             var that = this;
