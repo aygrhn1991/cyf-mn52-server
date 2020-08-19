@@ -4,16 +4,16 @@
     <div>
         <div class="layui-carousel" id="carousel">
             <div carousel-item="">
-                <a th:href="'/home/gallery/'+${carousel.id}" th:each="carousel:${carousel}"><img th:src="${ossUrl+carousel.cover}"></a>
+                <a th:href="${'/home/gallery/'+carousel.id}" th:each="carousel:${carousel}"><img th:src="${ossUrl+carousel.cover}"></a>
             </div>
         </div>
         <div class="content" th:each="category:${category}">
             <div class="content-title">
-                <a th:href="'/home/category/'+${category.id}" th:text="${category.name}"></a>
+                <a th:href="${'/home/category/'+category.id}" th:text="${category.name}"></a>
             </div>
             <div class="box">
                 <div class="block" th:each="gallery:${category.gallery}">
-                    <a th:href="'/home/gallery/'+${gallery.id}" class="block-img">
+                    <a th:href="${'/home/gallery/'+gallery.id}" class="block-img">
                         <div class="block-modal">
                             <div class="block-count" th:text="${gallery.img+'张'}"></div>
                         </div>
@@ -26,7 +26,7 @@
                             <img class="block-tip-good" src="/img/good.png" th:attr="galleryid=${gallery.id}"><span th:text="${gallery.good}"></span>
                         </div>
                         <div>
-                            <a class="tag" th:href="'/home/tag/'+${tag.tag_id}" th:each="tag:${gallery.tag}" th:text="${tag.tag_name}"></a>
+                            <a class="tag" th:href="${'/home/tag/'+tag.tag_id}" th:each="tag:${gallery.tag}" th:text="${tag.tag_name}"></a>
                         </div>
                     </div>
                 </div>
