@@ -59,30 +59,7 @@ public class HomeCtrl {
                     "left join mn_gallery_tag t1 on t.id=t1.gallery_id " +
                     "left join mn_tag t2 on t1.tag_id=t2.id and t2.state=1";
             List<Map<String, Object>> repeatGalleryList = this.jdbc.queryForList(sql, category.get("id").toString());
-            List<Map<String, Object>> galleryList = new ArrayList<>();
-            Set<String> gallerySet = new HashSet();
-            for (Map all : repeatGalleryList) {
-                gallerySet.add(all.get("id").toString());
-            }
-            List<String> galleryIdList = new ArrayList<>(gallerySet);
-            for (String galleryId : galleryIdList) {
-                Map gallery = new HashMap();
-                List<Map<String, Object>> galleryTagList = new ArrayList<>();
-                for (Map all : repeatGalleryList) {
-                    if (all.get("id").toString().equals(galleryId)) {
-                        gallery = all;
-                        Map tag = new HashMap();
-                        tag.put("tag_id", all.get("tag_id"));
-                        tag.put("tag_name", all.get("tag_name"));
-                        galleryTagList.add(tag);
-                    }
-                }
-                gallery.remove("tag_id");
-                gallery.remove("tag_name");
-                gallery.put("tag", galleryTagList);
-                galleryList.add(gallery);
-            }
-            category.put("gallery", galleryList);
+            category.put("gallery", this.makeGallery(repeatGalleryList));
         }
         model.addAttribute("category", categoryList);
         //布局内容
@@ -108,30 +85,7 @@ public class HomeCtrl {
                 "left join mn_gallery_tag t1 on t.id=t1.gallery_id " +
                 "left join mn_tag t2 on t1.tag_id=t2.id and t2.state=1";
         List<Map<String, Object>> repeatGalleryList = this.jdbc.queryForList(sql, id);
-        List<Map<String, Object>> galleryList = new ArrayList<>();
-        Set<String> gallerySet = new HashSet();
-        for (Map all : repeatGalleryList) {
-            gallerySet.add(all.get("id").toString());
-        }
-        List<String> galleryIdList = new ArrayList<>(gallerySet);
-        for (String galleryId : galleryIdList) {
-            Map gallery = new HashMap();
-            List<Map<String, Object>> galleryTagList = new ArrayList<>();
-            for (Map all : repeatGalleryList) {
-                if (all.get("id").toString().equals(galleryId)) {
-                    gallery = all;
-                    Map tag = new HashMap();
-                    tag.put("tag_id", all.get("tag_id"));
-                    tag.put("tag_name", all.get("tag_name"));
-                    galleryTagList.add(tag);
-                }
-            }
-            gallery.remove("tag_id");
-            gallery.remove("tag_name");
-            gallery.put("tag", galleryTagList);
-            galleryList.add(gallery);
-        }
-        model.addAttribute("gallery", galleryList);
+        model.addAttribute("gallery", this.makeGallery(repeatGalleryList));
         //分页
         sql = "select count(*) " +
                 "from mn_gallery t " +
@@ -187,7 +141,7 @@ public class HomeCtrl {
                 "where t.state=1 " +
                 "order by t.sort desc";
         List<Map<String, Object>> list = this.jdbc.queryForList(sql);
-        model.addAttribute("topCategory", list);
+        model.addAttribute("layoutCategory", list);
         //顶部置顶标签
         sql = "select t.id,t.name " +
                 "from mn_tag t " +
@@ -195,17 +149,44 @@ public class HomeCtrl {
                 "and t.top=1 " +
                 "order by t.time_update desc";
         list = this.jdbc.queryForList(sql);
-        model.addAttribute("topTag", list);
+        model.addAttribute("layoutTopTag", list);
         //最新标签
         sql = "select t.id,t.name " +
                 "from mn_tag t " +
                 "where t.state=1 " +
                 "order by t.time_update desc limit 0,100";
         List<Map<String, Object>> tagList = this.jdbc.queryForList(sql);
-        model.addAttribute("tag", tagList);
+        model.addAttribute("layoutTag", tagList);
         //全局变量
         model.addAttribute("ossUrl", this.ossUrl);
         model.addAttribute("date", new Date());
+    }
+
+    private List<Map<String, Object>> makeGallery(List<Map<String, Object>> repeatGalleryList) {
+        List<Map<String, Object>> galleryList = new ArrayList<>();
+        Set<String> gallerySet = new HashSet();
+        for (Map all : repeatGalleryList) {
+            gallerySet.add(all.get("id").toString());
+        }
+        List<String> galleryIdList = new ArrayList<>(gallerySet);
+        for (String galleryId : galleryIdList) {
+            Map gallery = new HashMap();
+            List<Map<String, Object>> galleryTagList = new ArrayList<>();
+            for (Map all : repeatGalleryList) {
+                if (all.get("id").toString().equals(galleryId)) {
+                    gallery = all;
+                    Map tag = new HashMap();
+                    tag.put("tag_id", all.get("tag_id"));
+                    tag.put("tag_name", all.get("tag_name"));
+                    galleryTagList.add(tag);
+                }
+            }
+            gallery.remove("tag_id");
+            gallery.remove("tag_name");
+            gallery.put("tag", galleryTagList);
+            galleryList.add(gallery);
+        }
+        return galleryList;
     }
 
     @RequestMapping("/good/{id}")

@@ -21,20 +21,20 @@
         </a>
         <ul class="nav">
             <li><a href="/home/index">首页</a></li>
-            <li th:each="topCategory:${topCategory}"><a th:href="@{'/home/category/'+${topCategory.id}}" th:text="${topCategory.name}"></a></li>
+            <li th:each="layoutCategory:${layoutCategory}"><a th:href="'/home/category/'+${layoutCategory.id}" th:text="${layoutCategory.name}"></a></li>
         </ul>
         <div class="search">
             <form action="/home/search">
                 <select name="id">
                     <option value="-1">全站搜索</option>
-                    <option th:value="${topCategory.id}" th:each="topCategory:${topCategory}" th:text="${topCategory.name}"></option>
+                    <option th:value="${layoutCategory.id}" th:each="layoutCategory:${layoutCategory}" th:text="${layoutCategory.name}"></option>
                 </select>
                 <input type="text" name="key" placeholder="请输入搜索关键词">
                 <button type="submit">搜索</button>
             </form>
             <ul class="top-tag">
-                <li>推荐标签：</li>
-                <li th:each="topTag:${topTag}"><a class="tag" th:href="@{'/home/tag/'+${topTag.id}}" th:text="${topTag.name}"></a></li>
+                <li>最新标签：</li>
+                <li th:each="layoutTopTag:${layoutTopTag}"><a class="tag" th:href="'/home/tag/'+${layoutTopTag.id}" th:text="${layoutTopTag.name}"></a></li>
             </ul>
         </div>
     </header>
@@ -45,7 +45,7 @@
             <a href="/home/tags">最新标签</a>
         </div>
         <div>
-            <a class="tag" th:href="@{'/home/tag/'+${tag.id}}" th:each="tag:${tag}" th:text="${tag.name}"></a>
+            <a class="tag" th:href="'/home/tag/'+${layoutTag.id}" th:each="layoutTag:${layoutTag}" th:text="${layoutTag.name}"></a>
         </div>
     </div>
     <hr color="#EBEEF1">
@@ -60,7 +60,7 @@
         <div class="link">
             <div>
                 <a href="/home/index">首页</a>
-                <a th:each="topCategory:${topCategory}" th:href="@{'/home/category/'+${topCategory.id}}" th:text="${topCategory.name}"></a>
+                <a th:each="layoutCategory:${layoutCategory}" th:href="'/home/category/'+${layoutCategory.id}" th:text="${layoutCategory.name}"></a>
             </div>
             <div>
                 <a href="/wap/index">手机版</a>
