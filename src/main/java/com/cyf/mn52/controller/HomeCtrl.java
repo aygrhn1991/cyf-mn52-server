@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.*;
 
@@ -73,7 +74,7 @@ public class HomeCtrl {
         int limit = 20;
         int navigatePages = 10;
         //分类
-        String sql = "select * " +
+        String sql = "select t.id,t.name " +
                 "from mn_category t " +
                 "where t.state=1 " +
                 "and t.id=?";
@@ -89,7 +90,8 @@ public class HomeCtrl {
         //分页
         sql = "select count(*) " +
                 "from mn_gallery t " +
-                "where t.state=1 and t.category_id=?";
+                "where t.state=1 " +
+                "and t.category_id=?";
         int total = this.jdbc.queryForObject(sql, Integer.class, id);
         model.addAttribute("page", new UtilPageOfJava(page, limit, total, navigatePages));
         //布局内容
@@ -99,12 +101,67 @@ public class HomeCtrl {
 
     @RequestMapping("/gallery/{id}")
     public String gallery(@PathVariable int id, Model model) {
-        String sql = "select * " +
+        //图集信息
+        String sql = "select t.id,t.title,t.category_id,t1.name category_name from mn_gallery t left join mn_category t1 on t.category_id=t1.id where t.id=?";
+        List<Map<String, Object>> gallery = this.jdbc.queryForList(sql, id);
+        model.addAttribute("gallery", gallery.get(0));
+        //图片
+        sql = "select t.id,t.path " +
                 "from mn_image t " +
                 "where t.state=1 " +
-                "and t.gallery_id=?";
+                "and t.gallery_id=? " +
+                "order by t.id desc";
         List<Map<String, Object>> image = this.jdbc.queryForList(sql, id);
         model.addAttribute("image", image);
+        //标签
+        sql = "select t1.id,t1.name " +
+                "from mn_gallery_tag t " +
+                "left join mn_tag t1 on t.tag_id=t1.id " +
+                "where t.gallery_id=? " +
+                "order by t1.time_update";
+        List<Map<String, Object>> tag = this.jdbc.queryForList(sql, id);
+        model.addAttribute("tag", tag);
+        //前后图集
+        sql = "select t.id,t.cover " +
+                "from mn_gallery t " +
+                "where t.state=1 " +
+                "and t.id<? " +
+                "order by t.id desc limit 0,1";
+        List<Map<String, Object>> perGallery = this.jdbc.queryForList(sql, id);
+        model.addAttribute("perGallery", perGallery.get(0));
+        sql = "select t.id,t.cover " +
+                "from mn_gallery t " +
+                "where t.state=1 " +
+                "and t.id>? " +
+                "order by t.id limit 0,1";
+        List<Map<String, Object>> nextGallery = this.jdbc.queryForList(sql, id);
+        model.addAttribute("nextGallery", nextGallery.get(0));
+        //相关图集
+        List<String> tagIds = new ArrayList<>();
+        for (Map t : tag) {
+            tagIds.add(t.get("id").toString());
+        }
+        String inTag = StringUtils.join(tagIds, ",");
+        sql = "select distinct t.id,t.title,t.cover,t.scan,t.good,t.time_publish,(select count(*) from mn_image tt2 where tt2.state=1 and tt2.gallery_id=t.id) img,t2.id tag_id,t2.name tag_name " +
+                "from (select tt12.* from mn_gallery_tag tt1 left join mn_tag tt11 on tt1.tag_id=tt11.id left join mn_gallery tt12 on tt1.gallery_id=tt12.id where tt12.state=1 and tt12.category_id=? and tt1.tag_id in (" + inTag + ") order by tt12.time_publish limit 0,8) t " +
+                "left join mn_gallery_tag t1 on t.id=t1.gallery_id " +
+                "left join mn_tag t2 on t1.tag_id=t2.id and t2.state=1";
+        List<Map<String, Object>> repeatGalleryList = this.jdbc.queryForList(sql, gallery.get(0).get("category_id").toString());
+        model.addAttribute("relativeGallery", this.makeGallery(repeatGalleryList));
+        //热门图集
+        sql = "select t.id,t.title,t.cover,t.scan,t.good,(select count(*) from mn_image tt2 where tt2.state=1 and tt2.gallery_id=t.id) img,t2.id tag_id,t2.name tag_name " +
+                "from (select * from mn_gallery tt1 where tt1.state=1 and tt1.category_id=? order by tt1.scan desc limit 0,8) t " +
+                "left join mn_gallery_tag t1 on t.id=t1.gallery_id " +
+                "left join mn_tag t2 on t1.tag_id=t2.id and t2.state=1";
+        repeatGalleryList = this.jdbc.queryForList(sql, gallery.get(0).get("category_id").toString());
+        model.addAttribute("scanGallery", this.makeGallery(repeatGalleryList));
+        //最新图集
+        sql = "select t.id,t.title,t.cover,t.scan,t.good,(select count(*) from mn_image tt2 where tt2.state=1 and tt2.gallery_id=t.id) img,t2.id tag_id,t2.name tag_name " +
+                "from (select * from mn_gallery tt1 where tt1.state=1 and tt1.category_id=? order by tt1.time_publish desc limit 0,8) t " +
+                "left join mn_gallery_tag t1 on t.id=t1.gallery_id " +
+                "left join mn_tag t2 on t1.tag_id=t2.id and t2.state=1";
+        repeatGalleryList = this.jdbc.queryForList(sql, gallery.get(0).get("category_id").toString());
+        model.addAttribute("newGallery", this.makeGallery(repeatGalleryList));
         //布局内容
         this.concatLayoutData(model);
         //浏览量+1
