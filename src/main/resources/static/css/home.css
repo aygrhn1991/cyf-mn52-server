@@ -295,3 +295,15 @@ footer a {
     background: var(--tag-bg--color) !important;
     margin: 0 auto;
 }
+
+.perGallery {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100px;
+    height: 80px;
+}
+
+.perGallery > img {
+    width: 100%;
+}

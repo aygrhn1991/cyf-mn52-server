@@ -8,9 +8,15 @@
         <a th:href="${'/home/category/'+gallery.category_id}" th:text="${gallery.category_name}"></a>&nbsp;>&nbsp;
         <a th:text="${gallery.title}"></a>
     </div>
-    <ul id="gallery" class="galleryView">
-        <li th:each="image:${image}"><img th:src="${ossUrl+image.path}"/></li>
-    </ul>
+    <div>
+        <ul id="gallery" class="galleryView">
+            <li th:each="image:${image}"><img th:src="${ossUrl+image.path}"/></li>
+        </ul>
+        <div class="perGallery">
+            <img th:src="${ossUrl+perGallery.cover}">
+        </div>
+        <div class="nextGallery"></div>
+    </div>
     <div class="content">
         <div class="content-title">
             <a>图集标签</a>
