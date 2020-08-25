@@ -102,7 +102,10 @@ public class HomeCtrl {
     @RequestMapping("/gallery/{id}")
     public String gallery(@PathVariable int id, Model model) {
         //图集信息
-        String sql = "select t.id,t.title,t.category_id,t1.name category_name from mn_gallery t left join mn_category t1 on t.category_id=t1.id where t.id=?";
+        String sql = "select t.id,t.title,t.category_id,t1.name category_name " +
+                "from mn_gallery t " +
+                "left join mn_category t1 on t.category_id=t1.id " +
+                "where t.id=?";
         List<Map<String, Object>> gallery = this.jdbc.queryForList(sql, id);
         model.addAttribute("gallery", gallery.get(0));
         //图片
@@ -121,21 +124,27 @@ public class HomeCtrl {
                 "order by t1.time_update";
         List<Map<String, Object>> tag = this.jdbc.queryForList(sql, id);
         model.addAttribute("tag", tag);
-        //前后图集
-        sql = "select t.id,t.cover " +
-                "from mn_gallery t " +
-                "where t.state=1 " +
-                "and t.id<? " +
-                "order by t.id desc limit 0,1";
-        List<Map<String, Object>> perGallery = this.jdbc.queryForList(sql, id);
-        model.addAttribute("perGallery", perGallery.get(0));
-        sql = "select t.id,t.cover " +
-                "from mn_gallery t " +
-                "where t.state=1 " +
-                "and t.id>? " +
-                "order by t.id limit 0,1";
-        List<Map<String, Object>> nextGallery = this.jdbc.queryForList(sql, id);
-        model.addAttribute("nextGallery", nextGallery.get(0));
+//        try{
+            //前后图集
+            sql = "select t.id,t.cover " +
+                    "from mn_gallery t " +
+                    "where t.state=1 " +
+                    "and t.category_id=? " +
+                    "and t.id<? " +
+                    "order by t.id desc limit 0,1";
+            List<Map<String, Object>> perGallery = this.jdbc.queryForList(sql, gallery.get(0).get("category_id"), id);
+            model.addAttribute("perGallery", perGallery.get(0));
+            sql = "select t.id,t.cover " +
+                    "from mn_gallery t " +
+                    "where t.state=1 " +
+                    "and t.category_id=? " +
+                    "and t.id>? " +
+                    "order by t.id limit 0,1";
+            List<Map<String, Object>> nextGallery = this.jdbc.queryForList(sql, gallery.get(0).get("category_id"), id);
+            model.addAttribute("nextGallery", nextGallery.get(0));
+//        }catch (Exception e){
+//
+//        }
         //相关图集
         List<String> tagIds = new ArrayList<>();
         for (Map t : tag) {
