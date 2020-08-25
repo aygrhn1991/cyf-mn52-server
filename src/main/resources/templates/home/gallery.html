@@ -8,7 +8,7 @@
         <a th:href="${'/home/category/'+gallery.category_id}" th:text="${gallery.category_name}"></a>&nbsp;>&nbsp;
         <a th:text="${gallery.title}"></a>
     </div>
-    <div style="position:relative;">
+    <div style="position:relative;padding-bottom:20px;">
         <ul id="gallery" class="galleryView">
             <li th:each="image:${image}"><img th:src="${ossUrl+image.path}"/></li>
         </ul>
@@ -16,7 +16,7 @@
             <img th:src="${ossUrl+perGallery.cover}">
             <div class="per-next">上一图集</div>
         </a>
-        <a class="nextGallery" th:href="${'/home/gallery/'+perGallery.id}">
+        <a class="nextGallery" th:href="${'/home/gallery/'+nextGallery.id}">
             <img th:src="${ossUrl+nextGallery.cover}">
             <div class="per-next">下一图集</div>
         </a>

@@ -124,27 +124,37 @@ public class HomeCtrl {
                 "order by t1.time_update";
         List<Map<String, Object>> tag = this.jdbc.queryForList(sql, id);
         model.addAttribute("tag", tag);
-//        try{
-            //前后图集
+        //前后图集
+        sql = "select t.id,t.cover " +
+                "from mn_gallery t " +
+                "where t.state=1 " +
+                "and t.category_id=? " +
+                "and t.id<? " +
+                "order by t.id desc limit 0,1";
+        List<Map<String, Object>> perGallery = this.jdbc.queryForList(sql, gallery.get(0).get("category_id"), id);
+        if (perGallery.size() == 0) {
             sql = "select t.id,t.cover " +
                     "from mn_gallery t " +
                     "where t.state=1 " +
-                    "and t.category_id=? " +
-                    "and t.id<? " +
-                    "order by t.id desc limit 0,1";
-            List<Map<String, Object>> perGallery = this.jdbc.queryForList(sql, gallery.get(0).get("category_id"), id);
-            model.addAttribute("perGallery", perGallery.get(0));
-            sql = "select t.id,t.cover " +
-                    "from mn_gallery t " +
-                    "where t.state=1 " +
-                    "and t.category_id=? " +
-                    "and t.id>? " +
                     "order by t.id limit 0,1";
-            List<Map<String, Object>> nextGallery = this.jdbc.queryForList(sql, gallery.get(0).get("category_id"), id);
-            model.addAttribute("nextGallery", nextGallery.get(0));
-//        }catch (Exception e){
-//
-//        }
+            perGallery = this.jdbc.queryForList(sql);
+        }
+        model.addAttribute("perGallery", perGallery.get(0));
+        sql = "select t.id,t.cover " +
+                "from mn_gallery t " +
+                "where t.state=1 " +
+                "and t.category_id=? " +
+                "and t.id>? " +
+                "order by t.id limit 0,1";
+        List<Map<String, Object>> nextGallery = this.jdbc.queryForList(sql, gallery.get(0).get("category_id"), id);
+        if (nextGallery.size() == 0) {
+            sql = "select t.id,t.cover " +
+                    "from mn_gallery t " +
+                    "where t.state=1 " +
+                    "order by t.id desc limit 0,1";
+            nextGallery = this.jdbc.queryForList(sql);
+        }
+        model.addAttribute("nextGallery", nextGallery.get(0));
         //相关图集
         List<String> tagIds = new ArrayList<>();
         for (Map t : tag) {
