@@ -1,8 +1,44 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="home/layout">
 <div th:fragment="content">
-    <div ng-controller="indexCtrl">
-        tag
+    <div class="path">
+        <img src="/img/location.png">
+        当前位置：
+        <a href="/home/index">首页</a>&nbsp;>&nbsp;
+        <a th:text="${tag.name}"></a>
+    </div>
+    <div class="content">
+        <div class="content-title">
+            <a th:text="${tag.name}"></a>
+        </div>
+        <div class="box">
+            <div class="block" th:each="gallery:${gallery}">
+                <a th:href="${'/home/gallery/'+gallery.id}" class="block-img">
+                    <div class="block-modal">
+                        <div class="block-count" th:text="${gallery.img+'张'}"></div>
+                    </div>
+                    <img th:src="${ossUrl+gallery.cover}">
+                </a>
+                <div class="block-description">
+                    <div class="block-title" th:text="${gallery.title}"></div>
+                    <div class="block-tip">
+                        <img class="block-tip-scan" src="/img/scan.png"><span th:text="${gallery.scan}"></span>&nbsp;&nbsp;
+                        <img class="block-tip-good" src="/img/good.png" th:attr="galleryid=${gallery.id}"><span th:text="${gallery.good}"></span>
+                    </div>
+                    <div>
+                        <a class="tag" th:href="${'/home/tag/'+tag.tag_id}" th:each="tag:${gallery.tag}" th:text="${tag.tag_name}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page">
+            <a th:if="${!page.isFirstPage}" th:href="${'/home/tag/'+tag.id+'/'+page.firstPage}">首页</a>
+            <a th:if="${page.hasPreviousPage}" th:href="${'/home/tag/'+tag.id+'/'+page.prePage}">上一页</a>
+            <a th:class="${page.pageNumber==i?'page-select':''}" th:each="i:${page.navigatePageNumbers}" th:href="${'/home/tag/'+tag.id+'/'+i}" th:text="${i}"></a>
+            <a th:if="${page.hasNextPage}" th:href="${'/home/tag/'+tag.id+'/'+page.nextPage}">下一页</a>
+            <a th:if="${!page.isLastPage}" th:href="${'/home/tag/'+tag.id+'/'+page.lastPage}">尾页</a>
+            <span th:text="${'共'+page.pages+'页，'+page.total+'条'}"></span>
+        </div>
     </div>
 </div>
 </html>

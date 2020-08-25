@@ -73,7 +73,7 @@ public class HomeCtrl {
         page = page == null ? 1 : page;
         int limit = 20;
         int navigatePages = 10;
-        //分类
+        //分类（页面路径）
         String sql = "select t.id,t.name " +
                 "from mn_category t " +
                 "where t.state=1 " +
@@ -101,7 +101,7 @@ public class HomeCtrl {
 
     @RequestMapping("/gallery/{id}")
     public String gallery(@PathVariable int id, Model model) {
-        //图集信息
+        //图集信息（页面路径）
         String sql = "select t.id,t.title,t.category_id,t1.name category_name " +
                 "from mn_gallery t " +
                 "left join mn_category t1 on t.category_id=t1.id " +
@@ -194,12 +194,54 @@ public class HomeCtrl {
     }
 
     @RequestMapping("/tags")
-    public String tags() {
+    public String tags(Model model) {
+        //随机标签
+        String sql = "select t.id,t.name " +
+                "from mn_tag t " +
+                "order by rand() limit 0,100";
+        List<Map<String, Object>> randomTag = this.jdbc.queryForList(sql);
+        model.addAttribute("randomTag", randomTag);
+        //热门标签
+        sql = "select t.id,t.name " +
+                "from mn_tag t " +
+                "where t.state=1 " +
+                "order by t.scan desc limit 0,100";
+        List<Map<String, Object>> scanTag = this.jdbc.queryForList(sql);
+        model.addAttribute("scanTag", scanTag);
+        //布局内容
+        this.concatLayoutData(model);
         return "home/tags";
     }
 
-    @RequestMapping("/tag/{id}")
-    public String tag(@PathVariable int id) {
+    @RequestMapping(value = {"/tag/{id}/{page}", "/tag/{id}"})
+    public String tag(@PathVariable int id, @PathVariable(required = false) Integer page, Model model) {
+        page = page == null ? 1 : page;
+        int limit = 20;
+        int navigatePages = 10;
+        //标签（页面路径）
+        String sql = "select t.id,t.name " +
+                "from mn_tag t " +
+                "where t.state=1 " +
+                "and t.id=?";
+        List<Map<String, Object>> tag = this.jdbc.queryForList(sql, id);
+        model.addAttribute("tag", tag.get(0));
+        //图集
+        sql = "select t.id,t.title,t.cover,t.scan,t.good,(select count(*) from mn_image tt2 where tt2.state=1 and tt2.gallery_id=t.id) img,t2.id tag_id,t2.name tag_name " +
+                "from (select tt11.* from mn_gallery_tag tt1 left join mn_gallery tt11 on tt1.gallery_id=tt11.id where tt1.tag_id=? and tt11.id is not null order by tt1.gallery_id desc limit " + UtilPage.getPage(page, limit) + ") t " +
+                "left join mn_gallery_tag t1 on t.id=t1.gallery_id " +
+                "left join mn_tag t2 on t1.tag_id=t2.id and t2.state=1";
+        List<Map<String, Object>> repeatGalleryList = this.jdbc.queryForList(sql, id);
+        model.addAttribute("gallery", this.makeGallery(repeatGalleryList));
+        //分页
+        sql = "select count(*) " +
+                "from mn_gallery_tag t left join mn_gallery t1 on t.gallery_id=t1.id " +
+                "where t1.state=1 " +
+                "and t.tag_id=? " +
+                "and t1.id is not null";
+        int total = this.jdbc.queryForObject(sql, Integer.class, id);
+        model.addAttribute("page", new UtilPageOfJava(page, limit, total, navigatePages));
+        //布局内容
+        this.concatLayoutData(model);
         return "home/tag";
     }
 
@@ -231,8 +273,8 @@ public class HomeCtrl {
                 "from mn_tag t " +
                 "where t.state=1 " +
                 "order by t.time_update desc limit 0,100";
-        List<Map<String, Object>> tagList = this.jdbc.queryForList(sql);
-        model.addAttribute("layoutTag", tagList);
+        list = this.jdbc.queryForList(sql);
+        model.addAttribute("layoutTag", list);
         //全局变量
         model.addAttribute("ossUrl", this.ossUrl);
         model.addAttribute("date", new Date());
