@@ -246,7 +246,39 @@ public class HomeCtrl {
     }
 
     @RequestMapping("/search")
-    public String search(@RequestParam int id, @RequestParam String key) {
+    public String search(@RequestParam int id, @RequestParam String key, @RequestParam(required = false) Integer page, Model model) {
+        if (StringUtils.isEmptyOrWhitespace(key)) {
+            return "redirect:index";
+        }
+        page = page == null ? 1 : page;
+        int limit = 20;
+        int navigatePages = 10;
+        //搜索关键词（页面路径）
+        model.addAttribute("id", id);
+        model.addAttribute("key", key);
+        //图集
+        String sql = "select t.id,t.title,t.cover,t.scan,t.good,(select count(*) from mn_image tt2 where tt2.state=1 and tt2.gallery_id=t.id) img,t2.id tag_id,t2.name tag_name " +
+                "from (select * from mn_gallery tt1 where tt1.state=1 and tt1.title like '%" + key + "%' order by tt1.scan desc limit " + UtilPage.getPage(page, limit) + ") t " +
+                "left join mn_gallery_tag t1 on t.id=t1.gallery_id " +
+                "left join mn_tag t2 on t1.tag_id=t2.id and t2.state=1";
+        List<Map<String, Object>> repeatGalleryList = this.jdbc.queryForList(sql);
+        model.addAttribute("gallery", this.makeGallery(repeatGalleryList));
+        //分页
+        sql = "select count(*) " +
+                "from mn_gallery t " +
+                "where t.state=1 " +
+                "and t.title like '%" + key + "%'";
+        int total = this.jdbc.queryForObject(sql, Integer.class);
+        model.addAttribute("page", new UtilPageOfJava(page, limit, total, navigatePages));
+        //标签
+        sql = "select t.id,t.name " +
+                "from mn_tag t " +
+                "where t.state=1 " +
+                "and t.name like '%" + key + "%'";
+        List<Map<String, Object>> tag = this.jdbc.queryForList(sql);
+        model.addAttribute("tag", tag);
+        //布局内容
+        this.concatLayoutData(model);
         return "home/search";
     }
     //endregion

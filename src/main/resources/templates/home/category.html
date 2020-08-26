@@ -9,7 +9,7 @@
     </div>
     <div class="content">
         <div class="content-title">
-            <a th:href="${'/home/category/'+category.id}" th:text="${category.name}"></a>
+            <a th:text="${category.name}"></a>
         </div>
         <div class="box">
             <div class="block" th:each="gallery:${gallery}">

@@ -91,7 +91,7 @@ public class UtilPageOfJava {
     //判定页面边界
     private void judgePageBoudary() {
         isFirstPage = pageNumber == 1;
-        isLastPage = pageNumber == pages && pageNumber != 1;
+        isLastPage = pageNumber == pages || pages == 1;
         hasPreviousPage = pageNumber != 1;
         hasNextPage = pageNumber != pages;
     }
